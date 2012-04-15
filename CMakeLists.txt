@@ -24,8 +24,7 @@ FIND_PACKAGE( QT4 REQUIRED )
 INCLUDE( ${QT_USE_FILE} )
 ADD_DEFINITIONS( ${QT_DEFINITIONS} )
 
-# Enable when something is put into lib!
-#ADD_SUBDIRECTORY( src/lib )
+ADD_SUBDIRECTORY( src/lib )
 
 IF( BUILD_SERVER MATCHES ON )
   ADD_SUBDIRECTORY( src/server )

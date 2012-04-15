@@ -1,6 +1,12 @@
 SET( NAME backup )
 
 SET( SOURCES
+  Config.h
+  Config.cpp
+  ConfigTree.h
+  ConfigTree.cpp
+  ConfigTreeNode.h
+  ConfigTreeNode.cpp
   )
 
 SET( HEADERS
