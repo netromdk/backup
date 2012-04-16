@@ -34,8 +34,29 @@ IF( BUILD_AGENT MATCHES ON )
   ADD_SUBDIRECTORY( src/agent )
 ENDIF()
 
+# Add a target to generate API documentation with Doxygen.
+FIND_PACKAGE( Doxygen )
+IF( DOXYGEN_FOUND )
+  CONFIGURE_FILE( 
+    ${PROJECT_SOURCE_DIR}/doc/doc.doxygen 
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile 
+    @ONLY )
+  ADD_CUSTOM_TARGET( 
+    doc 
+    ${DOXYGEN_EXECUTABLE} 
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating API documentation with Doxygen" 
+    VERBATIM )
+ENDIF()
+
 MESSAGE( STATUS "--------------------------------------------------" )
 MESSAGE( STATUS "BUILD          = ${CMAKE_BUILD_TYPE}" )
 MESSAGE( STATUS "BUILD_SERVER   = ${BUILD_SERVER}" )
 MESSAGE( STATUS "BUILD_AGENT    = ${BUILD_AGENT}" )
 MESSAGE( STATUS "--------------------------------------------------" )
+
+IF( DOXYGEN_FOUND ) 
+MESSAGE( STATUS "Doxygen was found - Use 'doc' target to generate." )
+MESSAGE( STATUS "--------------------------------------------------" )
+ENDIF()
