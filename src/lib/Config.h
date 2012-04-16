@@ -4,7 +4,7 @@
 #include <QFlags>
 #include <QString>
 
-class ConfigTree;
+class ConfigTreeNode;
 
 /**
  * Reads and writes configuration files in XML format.
@@ -30,8 +30,8 @@ public:
   bool isValid();
   Errors getErrors() const { return errors; }
   
-  bool parse(ConfigTree &tree);
-  bool commit(const ConfigTree &tree);
+  ConfigTreeNode *parse();
+  bool commit(const ConfigTreeNode *tree);
 
 private:
   void init();

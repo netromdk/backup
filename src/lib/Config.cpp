@@ -4,7 +4,6 @@
 #include <QXmlStreamReader>
 
 #include "Config.h"
-#include "ConfigTree.h"
 #include "ConfigTreeNode.h"
 
 Config::Config() {
@@ -48,17 +47,17 @@ bool Config::isValid() {
   return true;
 }
 
-bool Config::parse(ConfigTree &tree) {
+ConfigTreeNode *Config::parse() {
   resetErrors();
   
   QFile file(path);
   if (!file.open(QIODevice::ReadOnly)) {
     errors |= PathNonReadable;
-    return false;
+    return NULL;
   }
 
   QStack<ConfigTreeNode*> levels;
-  ConfigTreeNode *root = tree.getRoot();
+  ConfigTreeNode *root = new ConfigTreeNode("root");
   bool first = true;
   
   QXmlStreamReader reader(&file);
@@ -112,13 +111,14 @@ bool Config::parse(ConfigTree &tree) {
   if (reader.hasError()) {
     qCritical() << "parse error:" << reader.errorString();
     errors |= SyntaxError;
-    return false;
+    delete root;
+    return NULL;
   }
   
-  return true;
+  return root;
 }
 
-bool Config::commit(const ConfigTree &tree) {
+bool Config::commit(const ConfigTreeNode *tree) {
   return true;
 }
 
