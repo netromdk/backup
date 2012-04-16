@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 #include "Config.h"
 #include "ConfigTreeNode.h"
@@ -59,6 +60,7 @@ ConfigTreeNode *Config::parse() {
   QStack<ConfigTreeNode*> levels;
   ConfigTreeNode *root = new ConfigTreeNode("root");
   bool first = true;
+  QString comment;
   
   QXmlStreamReader reader(&file);
   while (!reader.atEnd() && !reader.hasError()) {
@@ -80,6 +82,12 @@ ConfigTreeNode *Config::parse() {
         node->addValue(atts);
       }
 
+      // Save comment.
+      if (!comment.isEmpty()) {
+        node->setComment(comment);
+        comment = "";
+      }
+
       if (first) {
         first = false;
         root->addNode(node);
@@ -95,6 +103,10 @@ ConfigTreeNode *Config::parse() {
       if (!text.isEmpty()) {
         node->addValue(text);
       }
+    }
+
+    if (token == QXmlStreamReader::Comment) {
+      comment = reader.text().toString();
     }
 
     else if (token == QXmlStreamReader::EndElement) {
@@ -119,9 +131,66 @@ ConfigTreeNode *Config::parse() {
 }
 
 bool Config::commit(const ConfigTreeNode *tree) {
+  resetErrors();
+  
+  QFile file(path);
+  if (!file.open(QIODevice::WriteOnly)) {
+    errors |= PathNonWritable;
+    return false;
+  }
+
+  QXmlStreamWriter writer(&file);
+  writer.setAutoFormatting(true);
+  writer.setAutoFormattingIndent(2);
+  writer.writeStartDocument();
+
+  // Skip writing first root element.
+  writeTree(tree, writer, true);
+
+  writer.writeEndDocument();
+  file.flush();
+  file.close();
+  
   return true;
 }
 
 void Config::init() {
   resetErrors();
+}
+
+void Config::writeTree(const ConfigTreeNode *node, QXmlStreamWriter &writer, bool skip) {
+  if (!skip) {
+    if (node->hasComment()) {
+      writer.writeComment(node->getComment());
+    }
+    
+    writer.writeStartElement(node->getName());
+
+    const QVariantList &values = node->getValues();
+    foreach (const QVariant &value, values) {
+      switch (value.type()) {
+      // Maps are considered attributes.
+      case QMetaType::QVariantMap: {
+        QVariantMap map = value.toMap();
+        foreach (const QString &key, map.keys()) {
+          const QVariant &var = map[key];
+          writer.writeAttribute(key, var.toString());
+        }
+        break;
+      }
+
+      default:
+        writer.writeCharacters(value.toString());
+        break;
+      }
+    }
+  }
+  
+  foreach (ConfigTreeNode *elm, node->getNodes()) {
+    writeTree(elm, writer, false);
+  }
+
+  if (!skip) {
+    writer.writeEndElement();
+  }
 }

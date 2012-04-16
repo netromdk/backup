@@ -5,6 +5,7 @@
 #include <QString>
 
 class ConfigTreeNode;
+class QXmlStreamWriter;
 
 /**
  * Reads and writes configuration files in XML format.
@@ -35,7 +36,8 @@ public:
 
 private:
   void init();
-  void resetErrors() { errors = NoError; }    
+  void resetErrors() { errors = NoError; }
+  void writeTree(const ConfigTreeNode *node, QXmlStreamWriter &writer, bool skip = false);  
   
   QString path;
   Errors errors;

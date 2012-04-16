@@ -29,6 +29,10 @@ public:
 
   QString getName() const { return name; }
 
+  bool hasComment() const { return !comment.isEmpty(); }
+  void setComment(const QString &comment) { this->comment = comment; }
+  QString getComment() const { return comment; }
+
   void addNode(ConfigTreeNode *node) { nodes.append(node); }
   ConfigTreeNodeList getNodes() const { return nodes; }
 
@@ -45,8 +49,8 @@ public:
 
   void addValue(const QVariant &value) { values.append(value); }
   void setValues(const QVariantList &values) { this->values = values; }
-  QVariantList &getValues() { return values; }
-  QVariantList getValues() const { return values; }
+  QVariantList getValues() { return values; }
+  const QVariantList &getValues() const { return values; }
 
   void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
@@ -54,7 +58,7 @@ private:
   QStringList pathToList(const QString &path);
   ConfigTreeNode *traverse(ConfigTreeNode *node, const QString &name);
   
-  QString name;
+  QString name, comment;
   ConfigTreeNodeList nodes;
   QVariantList values;
 };
