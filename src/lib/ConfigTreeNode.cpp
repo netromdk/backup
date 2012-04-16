@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QStringList>
 #include <QtAlgorithms>
 
 #include "ConfigTreeNode.h"
@@ -6,37 +7,31 @@
 ConfigTreeNode::ConfigTreeNode(const QString &name) : name(name) { }
 
 ConfigTreeNode::~ConfigTreeNode() {
-  if (nodes.size() > 0) {
-    qDeleteAll(nodes);
-  }
+  qDeleteAll(nodes);
+  nodes.clear();
 }
 
-ConfigTreeNode *ConfigTreeNode::searchNode(const QString &path) {
- QStringList elms = pathToList(path);
-  if (elms.size() == 0) {
-    return NULL;
-  }
+ConfigTreeNodeList ConfigTreeNode::searchNodes(ConfigPath path) {
+  ConfigTreeNodeList candidates;
+  candidates.append(this);
 
-  // Walk the path and find the node list.
-  ConfigTreeNode *node = this;
-  while (elms.size() > 0) {
-    QString part = elms.takeFirst();
-    node = traverse(node, part);
-    if (!node) {
-      return NULL;
+  ConfigPathElement *configElm;
+  while ((configElm = path.next())) {
+    candidates = traverse(candidates, configElm);
+    if (candidates.size() == 0) {
+      return candidates;
     }
   }
 
-  return node;  
+  return candidates;
 }
 
-bool ConfigTreeNode::searchNodes(const QString &path, ConfigTreeNodeList &nodes) {
-  ConfigTreeNode *node = searchNode(path);
-  if (node) {
-    nodes = node->getNodes();
-    return true;
+ConfigTreeNode *ConfigTreeNode::searchNode(ConfigPath path) {
+  ConfigTreeNodeList list = searchNodes(path);
+  if (list.size() > 0) {
+    return list[0];
   }
-  return false;  
+  return NULL;
 }
 
 void ConfigTreeNode::print(QDebug dbg, int depth) const {
@@ -95,28 +90,29 @@ void ConfigTreeNode::print(QDebug dbg, int depth) const {
   }
 }
 
-QStringList ConfigTreeNode::pathToList(const QString &path) {
-  QStringList elms = path.split("/", QString::SkipEmptyParts);
-  if (elms.size() == 0) {
-    return elms;
+ConfigTreeNodeList ConfigTreeNode::traverse(ConfigTreeNodeList &nodeList,
+                                            ConfigPathElement *configElm) {
+  if (nodeList.size() == 0) {
+    return nodeList;
   }
 
-  // Ignore my own name if it occurs.
-  if (elms[0] == name) {
-    elms.removeFirst();
-  }
-  
-  return elms;
-}
-
-ConfigTreeNode *ConfigTreeNode::traverse(ConfigTreeNode *node, const QString &name) {
-  if (!node) return NULL;
-
-  foreach (ConfigTreeNode *elm, node->getNodes()) {
-    if (elm->getName() == name) {
-      return elm;
+  ConfigTreeNodeList res;
+  foreach (ConfigTreeNode *elm, nodeList) {
+    switch (configElm->getKind()) {
+    case ConfigPathElement::Name: {
+      foreach (ConfigTreeNode *subelm, elm->getNodes()) {
+        QString elmName = dynamic_cast<ConfigPathElementName*>(configElm)->getName();
+        if (subelm->getName() == elmName) {
+          res.append(subelm);
+        }
+      }
+      break;
     }
+
+    case ConfigPathElement::Quantifier:
+      break;        
+    }    
   }
 
-  return NULL;
+  return res;
 }

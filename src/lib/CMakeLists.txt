@@ -5,6 +5,9 @@ SET( SOURCES
   Config.cpp
   ConfigTreeNode.h
   ConfigTreeNode.cpp
+  ConfigPath.h
+  ConfigPath.cpp
+  ConfigPathElement.h
   )
 
 SET( HEADERS

@@ -4,17 +4,19 @@
 #include <QList>
 #include <QDebug>
 #include <QString>
-#include <QStringList>
 #include <QVariantList>
+
+#include "ConfigPath.h"
 
 class ConfigTreeNode;
 typedef QList<ConfigTreeNode*> ConfigTreeNodeList;
 
+class ConfigPathElement;
+
 /**
- * The ConfigTreeNode class provides a way to represent a
- * configuration file in a tree structure. Each node in the tree has a
- * name associated to it, and both nodes and leaves can have QVariant
- * values stored with them.
+ * Provides a way to represent a configuration file in a tree
+ * structure. Each node in the tree has a name associated to it, and
+ * both nodes and leaves can have QVariant values stored with them.
  *
  * Paths can be used to easily search the tree. These are of the form
  * "name/name2/name3/..". It will start by looking in the root nodes
@@ -37,15 +39,14 @@ public:
   ConfigTreeNodeList getNodes() const { return nodes; }
 
   /**
-   * Search for the node for the given path.
+   * Search for the nodes of the given path.
    */
-  ConfigTreeNode *searchNode(const QString &path);  
+  ConfigTreeNodeList searchNodes(ConfigPath path);
 
   /**
-   * Search for the node list for the given path. Returns false if
-   * nothing was found.
+   * Search for the node of the given path.
    */
-  bool searchNodes(const QString &path, ConfigTreeNodeList &nodes);  
+  ConfigTreeNode *searchNode(ConfigPath path);  
 
   void addValue(const QVariant &value) { values.append(value); }
   void setValues(const QVariantList &values) { this->values = values; }
@@ -55,8 +56,8 @@ public:
   void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
 private:
-  QStringList pathToList(const QString &path);
-  ConfigTreeNode *traverse(ConfigTreeNode *node, const QString &name);
+  ConfigTreeNodeList traverse(ConfigTreeNodeList &nodeList,
+                              ConfigPathElement *configElm);
   
   QString name, comment;
   ConfigTreeNodeList nodes;
