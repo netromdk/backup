@@ -48,7 +48,7 @@ public:
   QVariantList &getValues() { return values; }
   QVariantList getValues() const { return values; }
 
-  void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0);
+  void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
 private:
   QStringList pathToList(const QString &path);
@@ -58,5 +58,15 @@ private:
   ConfigTreeNodeList nodes;
   QVariantList values;
 };
+
+inline QDebug operator<<(QDebug debug, const ConfigTreeNode &node) {
+  node.print(debug);
+  return debug;
+}
+
+inline QDebug operator<<(QDebug debug, const ConfigTreeNode *node) {
+  node->print(debug);
+  return debug;
+}
 
 #endif // CONFIG_TREE_NODE_H

@@ -39,7 +39,7 @@ bool ConfigTreeNode::searchNodes(const QString &path, ConfigTreeNodeList &nodes)
   return false;  
 }
 
-void ConfigTreeNode::print(QDebug dbg, int depth) {
+void ConfigTreeNode::print(QDebug dbg, int depth) const {
   QString pad = "";
   for (int i = 0; i < depth; i++) {
     pad += "  ";
