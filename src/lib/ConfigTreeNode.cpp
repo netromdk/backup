@@ -83,11 +83,12 @@ void ConfigTreeNode::print(QDebug dbg, int depth) const {
   dbg.nospace() << "\n";
 
   depth++;
-  //foreach (ConfigTreeNode *node, nodes) {
   for (int i = 0; i < nodes.size(); i++) {
     ConfigTreeNode *node = nodes[i];
     node->print(dbg, depth);
 
+    // Add a line break in the end if this node had a comment - it is
+    // more readable.
     if (node->hasComment() && nodes.size() > 1 && i < nodes.size() - 1) {
       dbg.nospace() << "\n";
     }

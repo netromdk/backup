@@ -180,7 +180,10 @@ void Config::writeTree(const ConfigTreeNode *node, QXmlStreamWriter &writer, boo
       }
 
       default:
-        writer.writeCharacters(value.toString());
+        // Only write out if the node is a leaf.
+        if (node->getNodes().size() == 0) {
+          writer.writeCharacters(value.toString());
+        }
         break;
       }
     }
