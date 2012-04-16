@@ -11,7 +11,7 @@ ConfigTreeNode::~ConfigTreeNode() {
   }
 }
 
-void ConfigTreeNode::print(int depth, QDebug dbg) {
+void ConfigTreeNode::print(QDebug dbg, int depth) {
   QString pad = "";
   for (int i = 0; i < depth; i++) {
     pad += "  ";
@@ -21,10 +21,10 @@ void ConfigTreeNode::print(int depth, QDebug dbg) {
   if (values.size() > 0) {
     dbg.space() << "=" << values;
   }
-  dbg << "\n";
-  
+  dbg.nospace() << "\n";
+
   depth++;
   foreach (ConfigTreeNode *node, nodes) {
-    node->print(depth, dbg);
+    node->print(dbg, depth);
   }
 }

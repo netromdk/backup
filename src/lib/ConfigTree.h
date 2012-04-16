@@ -7,6 +7,18 @@
 
 #include "ConfigTreeNode.h"
 
+/**
+ * The ConfigTree class provides a way to represent a configuration
+ * file in a tree structure. Each node in the tree has a name
+ * associated to it, and both nodes and leaves can have QVariant
+ * values stored with them.
+ *
+ * Paths can be used to easily search the tree. These are of the form
+ * "name/name2/name3/..". It will start by looking in the root nodes
+ * to see if it can find "name" then search for "name2" in that
+ * subtree etc. The name of the root will always be ignored if
+ * supplied in the path.
+ */
 class ConfigTree {
 public:
   ConfigTree(const QString &name = QString("root"));
@@ -23,12 +35,16 @@ public:
    */
   bool getNodes(const QString &path, ConfigTreeNodeList &nodes);
 
-  // Add node at specified point in the tree and returns the node it
-  // was added to.
-  //ConfigTreeNode *addNode(const QString &path, ConfigTreeNode *node);
+  /**
+   * Add node to root node.
+   */
+  void addNode(ConfigTreeNode *node);
 
-  // Add node to root node.
-  //ConfigTreeNode *addNode(ConfigTreeNode *node);  
+  /**
+   * Add node at specified point in the tree and returns the node it
+   * was added to.
+   */
+  ConfigTreeNode *addNode(const QString &path, ConfigTreeNode *node);  
   
   ConfigTreeNode *getRoot() const { return tree; }
 

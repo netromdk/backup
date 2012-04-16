@@ -24,7 +24,7 @@ public:
   QVariantList &getValues() { return values; }
   QVariantList getValues() const { return values; }
 
-  void print(int depth = 0, QDebug dbg = QDebug(QtDebugMsg));
+  void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0);
 
 private:
   QString name;

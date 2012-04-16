@@ -37,12 +37,23 @@ bool ConfigTree::getNodes(const QString &path, ConfigTreeNodeList &nodes) {
   return false;
 }
 
+void ConfigTree::addNode(ConfigTreeNode *node) {
+  tree->addNode(node);
+}
+
+ConfigTreeNode *ConfigTree::addNode(const QString &path, ConfigTreeNode *node) {
+  ConfigTreeNode *elm = getNode(path);
+  if (!elm) return NULL;
+  elm->addNode(node);
+  return elm;
+}
+
 void ConfigTree::print(QDebug dbg) {
-  tree->print(0, dbg);
+  tree->print(dbg);
 }
 
 QStringList ConfigTree::pathToList(const QString &path) {
-  QStringList elms = path.split("/");
+  QStringList elms = path.split("/", QString::SkipEmptyParts);
   if (elms.size() == 0) {
     return elms;
   }
