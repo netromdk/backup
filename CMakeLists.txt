@@ -20,22 +20,13 @@ OPTION( BUILD_SERVER "Set to ON to build server program" ON )
 OPTION( BUILD_AGENT "Set to ON to build agent program" ON )
 
 # Dependencies.
-FIND_PACKAGE( QT4 REQUIRED )
+FIND_PACKAGE( QT4 4.8.1 REQUIRED 
+              COMPONENTS QtCore )
 INCLUDE( ${QT_USE_FILE} )
 ADD_DEFINITIONS( ${QT_DEFINITIONS} )
 
-ADD_SUBDIRECTORY( src/lib )
-
-IF( BUILD_SERVER MATCHES ON )
-  ADD_SUBDIRECTORY( src/server )
-ENDIF()
-
-IF( BUILD_AGENT MATCHES ON )
-  ADD_SUBDIRECTORY( src/agent )
-ENDIF()
-
 # Add a target to generate API documentation with Doxygen.
-FIND_PACKAGE( Doxygen )
+FIND_PACKAGE( Doxygen 1.8.0 )
 IF( DOXYGEN_FOUND )
   CONFIGURE_FILE( 
     ${PROJECT_SOURCE_DIR}/doc/doc.doxygen 
@@ -48,6 +39,16 @@ IF( DOXYGEN_FOUND )
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with Doxygen" 
     VERBATIM )
+ENDIF()
+
+ADD_SUBDIRECTORY( src/lib )
+
+IF( BUILD_SERVER MATCHES ON )
+  ADD_SUBDIRECTORY( src/server )
+ENDIF()
+
+IF( BUILD_AGENT MATCHES ON )
+  ADD_SUBDIRECTORY( src/agent )
 ENDIF()
 
 MESSAGE( STATUS "--------------------------------------------------" )
