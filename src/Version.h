@@ -21,7 +21,7 @@ static inline QString versionString(bool showDate = true) {
   return versionString(MAJOR_VERSION, MINOR_VERSION, BUILD_VERSION, showDate);
 }
 
-static QString versionString(int version, bool showDate = true) {
+static inline QString versionString(int version, bool showDate = true) {
   int major = version / MAJOR_FACTOR,
     minor = (version / MINOR_FACTOR) - (major * (MAJOR_FACTOR / MINOR_FACTOR)),
     build = version - (major * MAJOR_FACTOR + minor * MINOR_FACTOR);

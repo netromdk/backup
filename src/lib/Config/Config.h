@@ -4,7 +4,8 @@
 #include <QFlags>
 #include <QString>
 
-class ConfigTreeNode;
+#include "ConfigTreeNode.h"
+
 class QXmlStreamWriter;
 
 /**

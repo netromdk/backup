@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
   QCoreApplication app(argc, argv);
 
-  qDebug() << "Starting backup agent -" << versionString().toUtf8().constData();
+  qDebug() << "Starting backup agent -" << qPrintable(versionString());
   
   return app.exec();
 }

@@ -5,22 +5,25 @@ INCLUDE_DIRECTORIES( ../lib )
 
 SET( SOURCES
   Main.cpp
+
+  ServerConfig.h
+  ServerConfig.cpp
   )
 
 SET( HEADERS
   )
 
-SET( CORELIBS
+SET( LIBS
   ${QT_LIBRARIES}
+  conf
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )
 
 ADD_EXECUTABLE( ${NAME} ${SOURCES} ${HEADERS_MOC} )
-TARGET_LINK_LIBRARIES( ${NAME} ${CORELIBS} )
-#TARGET_LINK_LIBRARIES( ${NAME} backup ${CORELIBS} )
+TARGET_LINK_LIBRARIES( ${NAME} ${LIBS} )
 
-#ADD_DEPENDENCIES(
-#  ${NAME}
-#  backup
-#  )
+ADD_DEPENDENCIES(
+  ${NAME}
+  conf
+  )
