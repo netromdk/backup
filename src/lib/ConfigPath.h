@@ -10,8 +10,9 @@
  * A ConfigPath is used to search a tree of ConfigTreeNode elements.
  *
  * The path itself consists internally of ConfigPathElement objects
- * (either ConfigPathElementName or ConfigPathElementQuantifier). A
- * string representation is used for this configuration path. An
+ * (either ConfigPathElementName or ConfigPathElementQuantifier).
+ *
+ * A string representation is used for this configuration path. An
  * example would be "/Foo/Bar/Baz" which will try to locate the node
  * with the name "Foo", then it will locate "Bar" in the sub tree of
  * "Foo" and finally look for "Bar" in that sub tree. Note that "/" is
