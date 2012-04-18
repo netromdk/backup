@@ -8,6 +8,7 @@ SET( SOURCES
   ConfigPath.h
   ConfigPath.cpp
   ConfigPathElement.h
+  ConfigPathElement.cpp
   )
 
 SET( HEADERS

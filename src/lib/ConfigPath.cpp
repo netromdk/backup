@@ -23,9 +23,11 @@ QString ConfigPath::toString() const {
   foreach (const ConfigPathElement *elm, pathList) {
     path += elm->toString() + "/";
   }
+
   if (path.endsWith("/")) {
     path.chop(1);
   }
+  
   return path;
 }
 
@@ -50,17 +52,10 @@ void ConfigPath::parse(const QString &path) {
     return;
   }
 
-  qDebug() << "config elms:" << elms;
-
   foreach (const QString &elm, elms) {
-    qDebug() << "config elm:" << elm;
-    
-    // Is it a quantifier?
-    if (false) {
-      // Skip for now.
+    if (ConfigPathElementQuantifier::regexp.exactMatch(elm)) {
+      pathList.append(new ConfigPathElementQuantifier(elm));      
     }
-
-    // Otherwise it's a name.
     else {
       pathList.append(new ConfigPathElementName(elm));
     }

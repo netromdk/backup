@@ -99,17 +99,34 @@ ConfigTreeNodeList ConfigTreeNode::traverse(ConfigTreeNodeList &nodeList,
   ConfigTreeNodeList res;
   foreach (ConfigTreeNode *elm, nodeList) {
     switch (configElm->getKind()) {
-    case ConfigPathElement::Name: {
+    case ConfigPathElement::Name: 
       foreach (ConfigTreeNode *subelm, elm->getNodes()) {
-        QString elmName = dynamic_cast<ConfigPathElementName*>(configElm)->getName();
+        QString elmName =
+          dynamic_cast<ConfigPathElementName*>(configElm)->getName();
         if (subelm->getName() == elmName) {
           res.append(subelm);
         }
       }
       break;
-    }
 
     case ConfigPathElement::Quantifier:
+      ConfigPathElementQuantifier *quantifier =
+        dynamic_cast<ConfigPathElementQuantifier*>(configElm);
+      if (quantifier->isKleene()) {
+        res.append(elm->getNodes());
+      }
+      else {
+        ConfigTreeNodeList nodes_ = elm->getNodes();
+        foreach (int index, quantifier->getIndices()) {
+          if (index < nodes_.size()) {
+            res.append(nodes_[index]);
+          }
+          else {
+            res.clear();
+            return res;
+          }
+        }
+      }
       break;        
     }    
   }
