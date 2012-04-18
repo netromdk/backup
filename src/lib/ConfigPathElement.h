@@ -28,6 +28,9 @@ private:
   Kind kind;
 };
 
+/**
+ * The name refers to a name of an element in the configuration tree.
+ */
 class ConfigPathElementName : public ConfigPathElement {
 public:
   ConfigPathElementName(const QString &name)
@@ -44,7 +47,8 @@ private:
 /**
  * The quantifier can be an index, an index range (like "1-2"), a
  * colon-separated list of indices and ranges, or the Kleene start (to
- * select all).
+ * select all). It it required that the string is enclosed in two
+ * square brackets. like "[0, 5-6]" for instance.
  */
 class ConfigPathElementQuantifier : public ConfigPathElement {
 public:
