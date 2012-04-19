@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-#include "config/Config.h"
+class ConfigTreeNode;
 
 class ServerConfig {
 public:
@@ -12,6 +12,8 @@ public:
 
   QString getPath() const { return path; }
   ConfigTreeNode *getRoot() const { return tree; }
+
+  void print(QDebug dbg = QDebug(QtDebugMsg)) const;  
   
 private:
   QString path;
@@ -19,9 +21,7 @@ private:
 };
 
 inline QDebug operator<<(QDebug debug, const ServerConfig &conf) {
-  debug << "ServerConfig @" << conf.getPath() << "=";
-  ConfigTreeNode *tree = conf.getRoot();
-  if (tree) tree->print(debug);
+  conf.print(debug);
   return debug;
 }
 
