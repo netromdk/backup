@@ -1,1 +1,2 @@
 ADD_SUBDIRECTORY( config )
+ADD_SUBDIRECTORY( util )

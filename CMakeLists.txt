@@ -23,7 +23,7 @@ OPTION( BUILD_AGENT "Set to ON to build agent program" ON )
 FIND_PACKAGE( QT4 4.8.1 REQUIRED 
               COMPONENTS QtCore )
 INCLUDE( ${QT_USE_FILE} )
-ADD_DEFINITIONS( ${QT_DEFINITIONS} )
+ADD_DEFINITIONS( ${QT_DEFINITIONS})
 
 # Add a target to generate API documentation with Doxygen.
 FIND_PACKAGE( Doxygen 1.8.0 )
