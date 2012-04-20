@@ -8,7 +8,11 @@
  */
 class Env {
 public:
-  static QString get(const QString &name);
+  /**
+   * Retrieve the environment variable denoted by 'name'. If it is not
+   * defined then return 'defaultValue'.
+   */
+  static QString get(const QString &name, const QString &defaultValue = QString());
 };
 
 #endif // ENV_H

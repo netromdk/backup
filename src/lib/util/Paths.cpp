@@ -11,7 +11,7 @@ QString Paths::getConfigDir() {
   }
 
 #ifdef WIN
-  configDir = Env::get("%APPDATA%") + "/backup";
+  configDir = Env::get("%APPDATA%", QDir::tempPath()) + "/backup";
 #elif UNIX
   configDir = QDir::homePath() + "/.backup";
 #endif

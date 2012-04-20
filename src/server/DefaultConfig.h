@@ -17,7 +17,15 @@ struct DefaultConfigItem {
 
 class DefaultConfig {
 public:
+  /**
+   * Create a configuration tree of all the default values.
+   */
   static ConfigTreeNode *create();
+
+  /**
+   * Retrieve the default value and comment for a given configuration
+   * item.
+   */
   static DefaultConfigItem getDefault(DefaultConfigItemName name);
 };
 
