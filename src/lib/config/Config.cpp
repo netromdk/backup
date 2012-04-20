@@ -43,19 +43,14 @@ bool Config::isValid() {
     fail = true;    
   }  
 
-  if (fail) return false;
-
-  return true;
+  return !fail;
 }
 
 ConfigTreeNode *Config::parse() {
-  resetErrors();
+  if (!isValid()) return NULL;
   
   QFile file(path);
-  if (!file.open(QIODevice::ReadOnly)) {
-    errors |= PathNonReadable;
-    return NULL;
-  }
+  file.open(QIODevice::ReadOnly);
 
   QStack<ConfigTreeNode*> levels;
   ConfigTreeNode *root = new ConfigTreeNode("root");
@@ -121,7 +116,8 @@ ConfigTreeNode *Config::parse() {
   }
 
   if (reader.hasError()) {
-    qCritical() << "parse error:" << reader.errorString();
+    qCritical().nospace() << "Parse error (L=" << reader.lineNumber() << "): "
+                          << reader.errorString();
     errors |= SyntaxError;
     delete root;
     return NULL;
@@ -131,13 +127,12 @@ ConfigTreeNode *Config::parse() {
 }
 
 bool Config::commit(const ConfigTreeNode *tree) {
-  resetErrors();
-  
-  QFile file(path);
-  if (!file.open(QIODevice::WriteOnly)) {
-    errors |= PathNonWritable;
+  if (!tree || !isValid()) {
     return false;
   }
+  
+  QFile file(path);
+  file.open(QIODevice::WriteOnly);
 
   QXmlStreamWriter writer(&file);
   writer.setAutoFormatting(true);

@@ -3,21 +3,28 @@
 
 #include <QDebug>
 
-class ConfigTreeNode;
+#include "config/Config.h"
 
 class ServerConfig {
 public:
   ServerConfig();
   virtual ~ServerConfig();
 
-  QString getPath() const { return path; }
+  bool isValid() const { return valid; }
+  Config::Errors getErrors() const { return config.getErrors(); }
+  QString getPath() const { return config.getPath(); }
   ConfigTreeNode *getRoot() const { return tree; }
+
+  bool save();
 
   void print(QDebug dbg = QDebug(QtDebugMsg)) const;  
   
 private:
-  QString path;
+  void load();
+  
   ConfigTreeNode *tree;
+  bool valid;
+  Config config;
 };
 
 inline QDebug operator<<(QDebug debug, const ServerConfig &conf) {

@@ -15,11 +15,11 @@ class Config {
 public:
   enum Error {
     NoError = 0x0,
-    NoPathDefined = 0x1,
-    PathNonExistent = 0x2,
-    PathNonReadable = 0x4,
-    PathNonWritable = 0x8,
-    SyntaxError = 0x16
+    NoPathDefined,
+    PathNonExistent,
+    PathNonReadable,
+    PathNonWritable,
+    SyntaxError
   };
   Q_DECLARE_FLAGS(Errors, Error);
 

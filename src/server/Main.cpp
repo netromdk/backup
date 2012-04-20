@@ -10,7 +10,10 @@ int main(int argc, char **argv) {
   qDebug() << "Starting backup server -" << qPrintable(versionString());
 
   ServerConfig conf;
-  qDebug() << conf;
+  if (!conf.isValid()) {
+    return -1;
+  }
+  qDebug() << "Loaded conf:" << conf.getPath();
 
   return app.exec();
 }
