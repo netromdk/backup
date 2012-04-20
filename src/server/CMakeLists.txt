@@ -17,8 +17,9 @@ SET( HEADERS
 
 SET( LIBS
   ${QT_LIBRARIES}
-  conf
   util
+  conf
+  comms
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )
@@ -28,6 +29,7 @@ TARGET_LINK_LIBRARIES( ${NAME} ${LIBS} )
 
 ADD_DEPENDENCIES(
   ${NAME}
-  conf
   util
+  conf
+  comms
   )
