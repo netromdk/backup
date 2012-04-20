@@ -6,6 +6,8 @@ INCLUDE_DIRECTORIES( ../lib )
 SET( SOURCES
   Main.cpp
 
+  Server.h
+  Server.cpp
   ServerConfig.h
   ServerConfig.cpp
   DefaultConfig.h

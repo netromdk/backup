@@ -14,10 +14,8 @@ Connection::Connection(int socketDescriptor, bool serverMode) {
   connect(this, SIGNAL(peerVerifyError(const QSslError&)),
           SLOT(onPeerVerifyError(const QSslError&)));
 
-  /*
-  setLocalCertificate(WebView::sslCert);
-  setPrivateKey(WebView::sslKey);
-  */
+  //setLocalCertificate(WebView::sslCert);
+  //setPrivateKey(WebView::sslKey);
 
   if (serverMode) {
     startServerEncryption();

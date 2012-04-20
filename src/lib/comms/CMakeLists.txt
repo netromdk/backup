@@ -10,6 +10,7 @@ SET( SOURCES
 
 SET( HEADERS
   SslServer.h
+  Connection.h
   )
 
 SET( CORELIBS

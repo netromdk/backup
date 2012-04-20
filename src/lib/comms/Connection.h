@@ -9,11 +9,6 @@ class Connection : public QSslSocket {
 public:
   Connection(int socketDescriptor, bool serverMode = false);
 
-  /*
-signals:
-  void
-  */
-                                  
 private slots:
   void onDataReady();
   void onEncrypted();
