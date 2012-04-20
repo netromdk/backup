@@ -3,6 +3,9 @@ SET( NAME util )
 SET( SOURCES
   Paths.h
   Paths.cpp
+
+  Env.h
+  Env.cpp
   )
 
 SET( HEADERS

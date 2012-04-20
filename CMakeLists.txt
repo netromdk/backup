@@ -16,6 +16,14 @@ ELSEIF (${CMAKE_BUILD_TYPE} MATCHES "Debug")
   ADD_DEFINITIONS( "-Wall" )
 ENDIF()
 
+# Set system flags.
+IF (UNIX) 
+  ADD_DEFINITIONS( "-DUNIX" )
+ENDIF ()
+IF (WIN32) 
+  ADD_DEFINITIONS( "-DWIN" )
+ENDIF ()
+
 OPTION( BUILD_SERVER "Set to ON to build server program" ON )
 OPTION( BUILD_AGENT "Set to ON to build agent program" ON )
 

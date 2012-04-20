@@ -1,5 +1,6 @@
 #include <QDir>
 
+#include "Env.h"
 #include "Paths.h"
 
 QString Paths::configDir = "";
@@ -9,11 +10,10 @@ QString Paths::getConfigDir() {
     return configDir;
   }
 
-  // TODO:
-  // Have a look at the paths Qt uses for QSettings.
-
-#ifdef __APPLE__
-  configDir = QDir::homePath() + "/Library/Application Support/backup/";
+#ifdef WIN
+  configDir = Env::get("%APPDATA%") + "/backup";
+#elif UNIX
+  configDir = QDir::homePath() + "/.backup";
 #endif
   
   return configDir;

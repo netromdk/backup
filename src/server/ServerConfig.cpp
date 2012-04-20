@@ -1,10 +1,25 @@
+#include <QDir>
+
 #include "util/Paths.h"
 #include "ServerConfig.h"
 #include "DefaultConfig.h"
 
 ServerConfig::ServerConfig() : tree(NULL), valid(false) {
-  config.setPath(Paths::getConfigDir() + "/srv.conf");  
+  QDir().mkpath(Paths::getConfigDir());
+  config.setPath(Paths::getConfigDir() + "/srv.conf");
   load();
+
+  if (config.getErrors().testFlag(Config::PathNonExistent)) {
+    qDebug() << "Config does not exist:" << config.getPath();
+    qDebug() << "Writing default.";
+    writeDefault();
+    if (valid) {
+      load();
+    }
+    else {
+      qCritical() << "Could not create default configuration file:" << config.getPath();
+    }
+  }  
 }
 
 ServerConfig::~ServerConfig() {
@@ -29,13 +44,9 @@ void ServerConfig::load() {
   valid = tree;
 
   if (config.getErrors().testFlag(Config::PathNonExistent)) {
-    qDebug() << "Config does not exist:" << config.getPath();
-    qDebug() << "Writing default.";
-    writeDefault();
-    load();
     return;
   }
-  
+
   if (!valid) {
     qCritical() << "Could not load/parse config file:" << config.getPath();
     return;
