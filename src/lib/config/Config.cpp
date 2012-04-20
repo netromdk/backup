@@ -127,12 +127,15 @@ ConfigTreeNode *Config::parse() {
 }
 
 bool Config::commit(const ConfigTreeNode *tree) {
-  if (!tree || !isValid()) {
-    return false;
-  }
+  resetErrors();
+  
+  if (!tree) return false;
   
   QFile file(path);
-  file.open(QIODevice::WriteOnly);
+  if (!file.open(QIODevice::WriteOnly)) {
+    errors |= PathNonWritable;
+    return false;
+  }
 
   QXmlStreamWriter writer(&file);
   writer.setAutoFormatting(true);

@@ -16,15 +16,19 @@ public:
   ConfigTreeNode *getRoot() const { return tree; }
 
   bool save();
+  void print(QDebug dbg = QDebug(QtDebugMsg)) const;
 
-  void print(QDebug dbg = QDebug(QtDebugMsg)) const;  
+  quint16 getPort() const { return portVar; }
   
 private:
   void load();
+  void writeDefault();
   
   ConfigTreeNode *tree;
   bool valid;
   Config config;
+
+  quint16 portVar;
 };
 
 inline QDebug operator<<(QDebug debug, const ServerConfig &conf) {

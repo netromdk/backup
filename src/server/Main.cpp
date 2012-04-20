@@ -14,6 +14,9 @@ int main(int argc, char **argv) {
     return -1;
   }
   qDebug() << "Loaded conf:" << conf.getPath();
+  qDebug() << conf;
+
+  qDebug() << "port:" << conf.getPort();
 
   return app.exec();
 }
