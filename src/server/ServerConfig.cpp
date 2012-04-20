@@ -40,14 +40,32 @@ void ServerConfig::load() {
     qCritical() << "Could not load/parse config file:" << config.getPath();
     return;
   }
-  
-  valid = true;
-
-  // TODO: Check that the types are correct and required fields exist.
 
   // Set the values for type-safe retrieval.
-  portVar =
-    tree->searchNode("ServerConfig/Port")->getValues()[0].toString().toUInt();
+  valid = false;
+  qDebug() << "Checking configuration file.. ";
+
+  ConfigTreeNode *node = tree->searchNode("ServerConfig");
+  if (!node) {
+    qCritical() << "The root element must be 'ServerConfig'!";
+    return;
+  }
+
+  // ServerConfig/Port
+  node = tree->searchNode("ServerConfig/Port");
+  if (!node) {
+    qCritical() << "Must have an entry 'ServerConfig/Port'!";
+    return;
+  }
+  QVariant var = node->getValue();
+  bool ok;
+  portVar = var.toString().toUInt(&ok);  
+  if (var.isNull() || !ok) {
+    qCritical() << "ServerConfig/Port needs to be an unsigned 16-bit integer!";
+    return;
+  }
+
+  valid = true;
 }
 
 void ServerConfig::writeDefault() {

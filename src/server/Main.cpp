@@ -13,9 +13,7 @@ int main(int argc, char **argv) {
   if (!conf.isValid()) {
     return -1;
   }
-  qDebug() << "Loaded conf:" << conf.getPath();
-  qDebug() << conf;
-
+  qDebug() << "Loaded conf:" << qPrintable(conf.getPath());
   qDebug() << "port:" << conf.getPort();
 
   return app.exec();

@@ -34,6 +34,13 @@ ConfigTreeNode *ConfigTreeNode::searchNode(ConfigPath path) {
   return NULL;
 }
 
+QVariant ConfigTreeNode::getValue() const {
+  if (values.size() > 0) {
+    return values[0];
+  }
+  return QVariant();
+}
+
 void ConfigTreeNode::print(QDebug dbg, int depth) const {
   QString pad = "";
   for (int i = 0; i < depth; i++) {

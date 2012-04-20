@@ -52,6 +52,7 @@ public:
   void setValues(const QVariantList &values) { this->values = values; }
   QVariantList getValues() { return values; }
   const QVariantList &getValues() const { return values; }
+  QVariant getValue() const;
 
   void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
