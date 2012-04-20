@@ -1,5 +1,6 @@
 #include "util/Paths.h"
 #include "ServerConfig.h"
+#include "DefaultConfig.h"
 
 ServerConfig::ServerConfig() : tree(NULL), valid(false) {
   config.setPath(Paths::getConfigDir() + "/srv.conf");  
@@ -50,25 +51,7 @@ void ServerConfig::load() {
 }
 
 void ServerConfig::writeDefault() {
-
-  /// TODO:
-  //    Add DefaultConfig class with:
-  //      enum DefaultItemName { Port, .. };
-  //      struct DefaultItem { ..value, ..comment };
-  //      static ConfigTreeNode *create()
-  //      static DefaultItem getDefaultValue(DefaultItemName item);
-  
   if (tree) delete tree;
-
-  tree = new ConfigTreeNode("root");
-
-  ConfigTreeNode *serverConfig = new ConfigTreeNode("ServerConfig");
-  tree->addNode(serverConfig);
-
-  ConfigTreeNode *port = new ConfigTreeNode("Port");
-  port->addValue(4512);
-  port->setComment("The port the server should bind to.");
-  serverConfig->addNode(port);
-
-  save();
+  tree = DefaultConfig::create();
+  valid = save();
 }

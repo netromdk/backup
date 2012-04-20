@@ -8,6 +8,8 @@ SET( SOURCES
 
   ServerConfig.h
   ServerConfig.cpp
+  DefaultConfig.h
+  DefaultConfig.cpp
   )
 
 SET( HEADERS
