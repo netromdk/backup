@@ -27,8 +27,8 @@ DefaultConfigItem DefaultConfig::getDefault(DefaultConfigItemName name) {
 
   switch (name) {
   case Host:
-    item.value = "127.0.0.1";
-    item.comment = "The host name the agent should connect to.";
+    item.value = "::1";
+    item.comment = "The host name / IP address the agent should connect to.";
     break;
 
   case Port:
