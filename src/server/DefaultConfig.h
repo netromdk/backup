@@ -8,6 +8,8 @@ class ConfigTreeNode;
 
 enum DefaultConfigItemName {
   Port,
+  SslCert,
+  SslKey
 };
 
 struct DefaultConfigItem {

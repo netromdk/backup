@@ -19,6 +19,8 @@ public:
   void print(QDebug dbg = QDebug(QtDebugMsg)) const;
 
   quint16 getPort() const { return portVar; }
+  QString getSslCert() const { return sslCertVar; }
+  QString getSslKey() const { return sslKeyVar; }  
   
 private:
   void load();
@@ -29,6 +31,7 @@ private:
   Config config;
 
   quint16 portVar;
+  QString sslCertVar, sslKeyVar;
 };
 
 inline QDebug operator<<(QDebug debug, const ServerConfig &conf) {

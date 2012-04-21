@@ -6,7 +6,7 @@
 
 ServerConfig::ServerConfig() : tree(NULL), valid(false) {
   QDir().mkpath(Paths::getConfigDir());
-  config.setPath(Paths::getConfigDir() + "/srv.conf");
+  config.setPath(Paths::getConfigDir() + "/server.conf");
   load();
 
   if (config.getErrors().testFlag(Config::PathNonExistent)) {
@@ -75,6 +75,34 @@ void ServerConfig::load() {
     qCritical() << "ServerConfig/Port needs to be an unsigned 16-bit integer!";
     return;
   }
+
+  // ServerConfig/SslCert
+  node = tree->searchNode("ServerConfig/SslCert");
+  if (!node) {
+    qCritical() << "Must have an entry 'ServerConfig/SslCert'!";
+    return;
+  }
+  var = node->getValue();
+  sslCertVar = var.toString();
+  // TODO: check file exists and that it is a proper SSL certificate!
+  if (var.isNull()) {
+    qCritical() << "ServerConfig/SslCert needs to point to a X.509 certificate in PEM format!";
+    return;
+  }
+
+  // ServerConfig/SslKey
+  node = tree->searchNode("ServerConfig/SslKey");
+  if (!node) {
+    qCritical() << "Must have an entry 'ServerConfig/SslKey'!";
+    return;
+  }
+  var = node->getValue();
+  sslKeyVar = var.toString();
+  // TODO: check file exists and that it is a proper SSL private key!
+  if (var.isNull()) {
+    qCritical() << "ServerConfig/SslKey needs to point to a X.509 private key in PEM format!";
+    return;
+  }    
 
   valid = true;
 }

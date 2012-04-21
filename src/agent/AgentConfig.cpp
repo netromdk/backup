@@ -6,7 +6,7 @@
 
 AgentConfig::AgentConfig() : tree(NULL), valid(false) {
   QDir().mkpath(Paths::getConfigDir());
-  config.setPath(Paths::getConfigDir() + "/agnt.conf");
+  config.setPath(Paths::getConfigDir() + "/agent.conf");
   load();
 
   if (config.getErrors().testFlag(Config::PathNonExistent)) {

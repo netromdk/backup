@@ -5,15 +5,17 @@
 
 #include "Connection.h"
 
-Connection::Connection(bool serverMode) : serverMode(serverMode) {
+Connection::Connection() : serverMode(false) {
   init();
 }
 
-Connection::Connection(int socketDescriptor, bool serverMode)
-  : serverMode(serverMode)
+Connection::Connection(int socketDescriptor, const QString &cert, const QString &key)
+  : serverMode(true)
 {
   setSocketDescriptor(socketDescriptor);
   init();
+  setLocalCertificate(cert);
+  setPrivateKey(key);
   handshake();
 }
 
@@ -43,10 +45,6 @@ void Connection::init() {
           SLOT(onSslErrors(const QList<QSslError>&)));
   connect(this, SIGNAL(peerVerifyError(const QSslError&)),
           SLOT(onPeerVerifyError(const QSslError&)));
-
-  // TODO: these should be settable and used by connections created by SslServer.
-  //setLocalCertificate(cert);
-  //setPrivateKey(key);
 }
 
 void Connection::handshake() {
