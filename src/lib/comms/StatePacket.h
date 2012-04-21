@@ -5,8 +5,6 @@
 
 #include "Packet.h"
 
-#define STATE_PACKET_SIZE 65536 // bytes
-
 /**
  * Provides a packet for storing key=value pairs using QString for the
  * keys and QVariant for the values.
@@ -15,10 +13,10 @@ class StatePacket : public Packet {
 public:
   StatePacket();
   
-  static StatePacket *fromData(QByteArray &data);
+  static StatePacket *fromData(const QByteArray &data);
 
-  virtual QByteArray getData(qint64 max = STATE_PACKET_SIZE);
-  void setData(QByteArray &data);
+  virtual QByteArray getData(qint64 max);
+  void setData(const QByteArray &data);
 
   QVariantMap getDataMap() const { return dataMap; }
   
@@ -30,7 +28,7 @@ private:
   void decode();
   
   QVariantMap dataMap;
-  bool encoded;
+  bool encoded, first;
   QByteArray data;
 };
 

@@ -2,9 +2,9 @@
 
 #include "StatePacket.h"
 
-StatePacket::StatePacket() : Packet(State), encoded(false) { }
+StatePacket::StatePacket() : Packet(State), encoded(false), first(true) { }
 
-StatePacket *StatePacket::fromData(QByteArray &data) {
+StatePacket *StatePacket::fromData(const QByteArray &data) {
   StatePacket *packet = new StatePacket;
   packet->setData(data);
   return packet;
@@ -14,18 +14,23 @@ QByteArray StatePacket::getData(qint64 max) {
   if (!encoded) encode();
   
   QByteArray res;
-  if (max > data.size()) {
-    res = data;
-    data.clear();
-    return res;
+
+  // Prepend the size of the data to the data so the other side knows
+  // how much to read.
+  if (first) {
+    first = false;
+    QDataStream stream(&res, QIODevice::WriteOnly);
+    stream << (qint32) data.size();
   }
 
-  res = data.mid(0, max);
-  data = data.mid(max);
+  // Take chunk of data.
+  int size = res.size();
+  res.append(data.left(max - size));
+  data = data.mid(res.size() - size);
   return res;
 }
 
-void StatePacket::setData(QByteArray &data) {
+void StatePacket::setData(const QByteArray &data) {
   this->data = data;
   decode();
 }
