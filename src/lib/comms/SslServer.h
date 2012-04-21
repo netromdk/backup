@@ -12,13 +12,15 @@ class SslServer : public QTcpServer {
 public:
   SslServer(const QString &cert, const QString &key);
 
-protected:
-  void incomingConnection(int socketDescriptor);
-
 signals:
   void newConnection(Connection *conn);
 
+protected:
+  void incomingConnection(int socketDescriptor);
+
 private:
+  void setSecurityParameters();
+  
   QString cert, key;
 };
 
