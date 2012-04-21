@@ -9,6 +9,11 @@ SET( SOURCES
   
   Connection.h
   Connection.cpp
+
+  Packet.h
+
+  StatePacket.h
+  StatePacket.cpp
   )
 
 SET( HEADERS
