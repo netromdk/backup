@@ -23,8 +23,8 @@ public:
 private slots:
   void onDataReady();
   void onEncrypted();
-  void onSslErrors(const QList<QSslError>&);
-  void onPeerVerifyError(const QSslError&);
+  void onSslErrors(const QList<QSslError> &erros);
+  void onPeerVerifyError(const QSslError &error);
 
   void handshake();
 

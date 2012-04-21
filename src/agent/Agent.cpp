@@ -14,12 +14,13 @@ Agent::Agent() : config(new AgentConfig) {
 
   conn = new Connection;
   conn->connectToHost(config->getHost(), config->getPort());
+  qDebug() << "Connecting to" << qPrintable(config->getHost()) << ":" << config->getPort();  
   if (!conn->waitForConnected()) {
     qCritical() << "Could not connect to" << qPrintable(config->getHost()) << ":" << config->getPort();
     QCoreApplication::exit(-1);
     exit(-1);    
   }
-  qDebug() << "Connected to" << qPrintable(config->getHost()) << ":" << config->getPort();
+  qDebug() << "Connection established.";
 }
 
 Agent::~Agent() {

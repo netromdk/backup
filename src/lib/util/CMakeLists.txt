@@ -1,6 +1,9 @@
 SET( NAME util )
 
 SET( SOURCES
+  Utility.h
+  Utility.cpp
+
   Paths.h
   Paths.cpp
 

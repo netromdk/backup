@@ -2,6 +2,7 @@
 
 #include "util/Paths.h"
 #include "AgentConfig.h"
+#include "util/Utility.h"
 #include "DefaultConfig.h"
 
 AgentConfig::AgentConfig() : tree(NULL), valid(false) {
@@ -69,10 +70,9 @@ void AgentConfig::load() {
     return;
   }
   QVariant var = node->getValue();
-  hostVar = var.toString();
-  // TODO: do check of host name!!!
-  if (var.isNull()) {
-    qCritical() << "AgentConfig/Host needs to be a string!";
+  hostVar = var.toString().trimmed();
+  if (var.isNull() || (!Utility::checkHostName(hostVar) && !Utility::checkIP(hostVar))) {
+    qCritical() << "AgentConfig/Host needs to be a correct host name / IP address!";
     return;
   }    
 
