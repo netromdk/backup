@@ -21,10 +21,10 @@ public:
   Connection(int socketDescriptor, const QString &cert, const QString &key);
 
 private slots:
+  void onDisconnected();
   void onDataReady();
   void onEncrypted();
   void onSslErrors(const QList<QSslError> &erros);
-  void onPeerVerifyError(const QSslError &error);
 
   void handshake();
 

@@ -13,10 +13,15 @@ Connection::Connection(int socketDescriptor, const QString &cert, const QString 
   : serverMode(true)
 {
   setSocketDescriptor(socketDescriptor);
-  init();
   setLocalCertificate(cert);
   setPrivateKey(key);
+  
+  init();
   handshake();
+}
+
+void Connection::onDisconnected() {
+  qDebug() << "Disconnected.";
 }
 
 void Connection::onDataReady() {
@@ -31,20 +36,24 @@ void Connection::onEncrypted() {
 
 void Connection::onSslErrors(const QList<QSslError> &errors) {
   qWarning() << "ssl errors:" << errors;
-}
 
-void Connection::onPeerVerifyError(const QSslError &error) {
-  qWarning() << "peer verify error:" << error;
+  // Ignore self-signed cert errors.
+  QList<QSslError> expectedErrors;
+  foreach (QSslError error, errors) {
+    if (error.error() == QSslError::SelfSignedCertificate) {
+      expectedErrors.append(error);
+    }
+  }
+  ignoreSslErrors(expectedErrors);
 }
 
 void Connection::init() {
-  connect(this, SIGNAL(connected()), SLOT(handshake()));  
+  connect(this, SIGNAL(connected()), SLOT(handshake()));
+  connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()));    
   connect(this, SIGNAL(readyRead()), SLOT(onDataReady()));
   connect(this, SIGNAL(encrypted()), SLOT(onEncrypted()));
   connect(this, SIGNAL(sslErrors(const QList<QSslError>&)),
           SLOT(onSslErrors(const QList<QSslError>&)));
-  connect(this, SIGNAL(peerVerifyError(const QSslError&)),
-          SLOT(onPeerVerifyError(const QSslError&)));
 }
 
 void Connection::handshake() {
