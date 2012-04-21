@@ -1,5 +1,5 @@
+#include "conf/Config.h"
 #include "DefaultConfig.h"
-#include "config/Config.h"
 
 ConfigTreeNode *DefaultConfig::create() {
   ConfigTreeNode *tree = new ConfigTreeNode("root");

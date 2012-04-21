@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QString>
 
-#include "config/Config.h"
+#include "conf/Config.h"
 
 class AgentConfig {
 public:

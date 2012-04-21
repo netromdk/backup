@@ -3,7 +3,7 @@
 
 #include <QDebug>
 
-#include "config/Config.h"
+#include "conf/Config.h"
 
 class ServerConfig {
 public:
