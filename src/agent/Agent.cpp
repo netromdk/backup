@@ -13,6 +13,8 @@ Agent::Agent() : config(new AgentConfig), conn(NULL) {
   qDebug() << "Loaded conf:" << qPrintable(config->getPath());
 
   conn = new Connection;
+  connect(conn, SIGNAL(ready()), SLOT(onConnectionReady()));
+  
   conn->connectToHost(config->getHost(), config->getPort());
   qDebug() << "Connecting to" << qPrintable(config->getHost()) << ":" << config->getPort();  
   if (!conn->waitForConnected()) {
@@ -28,4 +30,9 @@ Agent::~Agent() {
   if (conn) {
     delete conn;
   }
+}
+
+void Agent::onConnectionReady() {
+  qDebug() << "Ready to proceed.";
+  // initiate auth protocol here
 }

@@ -20,8 +20,14 @@ public:
    */
   Connection(int socketDescriptor, const QString &cert, const QString &key);
 
+signals:
+  /**
+   * This signal is emitted when the channel is encrypted and ready to
+   * send and receive data.
+   */
+  void ready();
+
 private slots:
-  void onDisconnected();
   void onDataReady();
   void onEncrypted();
   void onSslErrors(const QList<QSslError> &erros);

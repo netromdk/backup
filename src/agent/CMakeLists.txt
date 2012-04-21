@@ -15,6 +15,7 @@ SET( SOURCES
   )
 
 SET( HEADERS
+  Agent.h
   )
 
 SET( LIBS

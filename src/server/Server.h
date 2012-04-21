@@ -1,13 +1,22 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <QObject>
+
 class SslServer;
+class Connection;
 class ServerConfig;
 
-class Server {
+class Server : public QObject {
+  Q_OBJECT
+  
 public:
   Server();
   virtual ~Server();
+
+private slots:
+  void onNewConnection(Connection *conn);
+  void onConnectionDisconnected();
   
 private:
   ServerConfig *config;

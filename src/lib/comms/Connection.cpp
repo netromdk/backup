@@ -20,10 +20,6 @@ Connection::Connection(int socketDescriptor, const QString &cert, const QString 
   handshake();
 }
 
-void Connection::onDisconnected() {
-  qDebug() << "Disconnected.";
-}
-
 void Connection::onDataReady() {
   QByteArray data = readAll();
   // emit signal here after parsing!
@@ -32,6 +28,7 @@ void Connection::onDataReady() {
 
 void Connection::onEncrypted() {
   qDebug() << "Socket is encrypted:" << sslConfiguration().sessionCipher();
+  emit ready();
 }
 
 void Connection::onSslErrors(const QList<QSslError> &errors) {
@@ -49,7 +46,6 @@ void Connection::onSslErrors(const QList<QSslError> &errors) {
 
 void Connection::init() {
   connect(this, SIGNAL(connected()), SLOT(handshake()));
-  connect(this, SIGNAL(disconnected()), SLOT(onDisconnected()));    
   connect(this, SIGNAL(readyRead()), SLOT(onDataReady()));
   connect(this, SIGNAL(encrypted()), SLOT(onEncrypted()));
   connect(this, SIGNAL(sslErrors(const QList<QSslError>&)),

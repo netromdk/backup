@@ -15,6 +15,7 @@ SET( SOURCES
   )
 
 SET( HEADERS
+  Server.h
   )
 
 SET( LIBS
