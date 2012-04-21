@@ -5,6 +5,7 @@
 
 class SslServer;
 class Connection;
+class StatePacket;
 class ServerConfig;
 
 class Server : public QObject {
@@ -17,6 +18,7 @@ public:
 private slots:
   void onNewConnection(Connection *conn);
   void onConnectionDisconnected();
+  void onPacketReceived(StatePacket *packet);
   
 private:
   ServerConfig *config;

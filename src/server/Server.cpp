@@ -5,6 +5,7 @@
 #include "ServerConfig.h"
 #include "comms/SslServer.h"
 #include "comms/Connection.h"
+#include "comms/StatePacket.h"
 
 Server::Server() : config(new ServerConfig), server(NULL) {
   if (!config->isValid()) {
@@ -16,7 +17,7 @@ Server::Server() : config(new ServerConfig), server(NULL) {
   server = new SslServer(config->getSslCert(), config->getSslKey());
   connect(server, SIGNAL(newConnection(Connection*)),
           SLOT(onNewConnection(Connection*)));
-  
+
   if (!server->listen(QHostAddress::AnyIPv6, config->getPort())) {
     qCritical() << "Could not bind server to port" << config->getPort();
     QCoreApplication::exit(-1);
@@ -37,6 +38,8 @@ void Server::onNewConnection(Connection *conn) {
            << ":" << conn->peerPort();
 
   connect(conn, SIGNAL(disconnected()), SLOT(onConnectionDisconnected()));
+  connect(conn, SIGNAL(packetReceived(StatePacket*)),
+          SLOT(onPacketReceived(StatePacket*)));  
 }
 
 void Server::onConnectionDisconnected() {
@@ -45,4 +48,16 @@ void Server::onConnectionDisconnected() {
 
   qDebug() << "Disconnect from" << qPrintable(conn->peerAddress().toString())
            << ":" << conn->peerPort();
+}
+
+void Server::onPacketReceived(StatePacket *packet) {
+  Connection *conn = qobject_cast<Connection*>(sender());
+  if (!conn) return;
+
+  qDebug() << "Received packet from" << qPrintable(conn->peerAddress().toString())
+           << ":" << conn->peerPort();
+
+  qDebug() << "packet contents:" << packet->getDataMap();
+
+  delete packet;
 }
