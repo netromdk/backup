@@ -5,7 +5,7 @@
 #include "AgentConfig.h"
 #include "comms/Connection.h"
 
-Agent::Agent() : config(new AgentConfig) {
+Agent::Agent() : config(new AgentConfig), conn(NULL) {
   if (!config->isValid()) {
     QCoreApplication::exit(-1);
     exit(-1);
@@ -25,4 +25,7 @@ Agent::Agent() : config(new AgentConfig) {
 
 Agent::~Agent() {
   delete config;
+  if (conn) {
+    delete conn;
+  }
 }
