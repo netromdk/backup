@@ -32,6 +32,10 @@ void SslServer::setSecurityParameters() {
     ciphersAllowed.append(cipher);
   }
 
+  if (ciphersAllowed.size() == 0) {
+    qCritical() << "No ciphers were available and allowed!";
+  }
+
   sslConf.setCiphers(ciphersAllowed);
 
   // "Disables the insertion of empty fragments into the data when
