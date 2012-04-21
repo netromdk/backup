@@ -5,24 +5,16 @@
 
 #include "Connection.h"
 
-Connection::Connection(int socketDescriptor, bool serverMode) {
+Connection::Connection(bool serverMode) : serverMode(serverMode) {
+  init();
+}
+
+Connection::Connection(int socketDescriptor, bool serverMode)
+  : serverMode(serverMode)
+{
   setSocketDescriptor(socketDescriptor);
-  connect(this, SIGNAL(readyRead()), SLOT(onDataReady()));
-  connect(this, SIGNAL(encrypted()), SLOT(onEncrypted()));
-  connect(this, SIGNAL(sslErrors(const QList<QSslError>&)),
-          SLOT(onSslErrors(const QList<QSslError>&)));
-  connect(this, SIGNAL(peerVerifyError(const QSslError&)),
-          SLOT(onPeerVerifyError(const QSslError&)));
-
-  //setLocalCertificate(WebView::sslCert);
-  //setPrivateKey(WebView::sslKey);
-
-  if (serverMode) {
-    startServerEncryption();
-  }
-  else {
-    startClientEncryption();
-  }
+  init();
+  handshake();
 }
 
 void Connection::onDataReady() {
@@ -41,4 +33,27 @@ void Connection::onSslErrors(const QList<QSslError> &errors) {
 
 void Connection::onPeerVerifyError(const QSslError &error) {
   qWarning() << "peer verify error:" << error;
+}
+
+void Connection::init() {
+  connect(this, SIGNAL(connected()), SLOT(handshake()));  
+  connect(this, SIGNAL(readyRead()), SLOT(onDataReady()));
+  connect(this, SIGNAL(encrypted()), SLOT(onEncrypted()));
+  connect(this, SIGNAL(sslErrors(const QList<QSslError>&)),
+          SLOT(onSslErrors(const QList<QSslError>&)));
+  connect(this, SIGNAL(peerVerifyError(const QSslError&)),
+          SLOT(onPeerVerifyError(const QSslError&)));
+
+  // TODO: these should be settable and used by connections created by SslServer.
+  //setLocalCertificate(cert);
+  //setPrivateKey(key);
+}
+
+void Connection::handshake() {
+  if (serverMode) {
+    startServerEncryption();
+  }
+  else {
+    startClientEncryption();
+  }
 }

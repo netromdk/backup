@@ -1,6 +1,7 @@
 #ifndef AGENT_H
 #define AGENT_H
 
+class Connection;
 class AgentConfig;
 
 class Agent {
@@ -10,6 +11,7 @@ public:
   
 private:
   AgentConfig *config;
+  Connection *conn;
 };
 
 #endif // AGENT_H
