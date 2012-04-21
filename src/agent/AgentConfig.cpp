@@ -71,7 +71,7 @@ void AgentConfig::load() {
   }
   QVariant var = node->getValue();
   hostVar = var.toString().trimmed();
-  if (var.isNull() || (!Utility::checkHostName(hostVar) && !Utility::checkIP(hostVar))) {
+  if (var.isNull() || !Utility::checkHostOrIP(hostVar)) {
     qCritical() << "AgentConfig/Host needs to be a correct host name / IP address!";
     return;
   }    

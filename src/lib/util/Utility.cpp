@@ -13,3 +13,7 @@ bool Utility::checkIP(const QString &ip) {
   QHostAddress adr;
   return adr.setAddress(ip);
 }
+
+bool Utility::checkHostOrIP(const QString &str) {
+  return checkHostName(str) || checkIP(str);
+}
