@@ -1,5 +1,6 @@
 #include <QDir>
 
+#include "comms/Ssl.h"
 #include "util/Paths.h"
 #include "ServerConfig.h"
 #include "DefaultConfig.h"
@@ -84,8 +85,7 @@ void ServerConfig::load() {
   }
   var = node->getValue();
   sslCertVar = var.toString();
-  // TODO: check file exists and that it is a proper SSL certificate!
-  if (var.isNull()) {
+  if (var.isNull() || !Ssl::checkCert(sslCertVar).testFlag(Ssl::NoError)) {
     qCritical() << "ServerConfig/SslCert needs to point to a X.509 certificate in PEM format!";
     return;
   }
@@ -98,8 +98,7 @@ void ServerConfig::load() {
   }
   var = node->getValue();
   sslKeyVar = var.toString();
-  // TODO: check file exists and that it is a proper SSL private key!
-  if (var.isNull()) {
+  if (var.isNull() || !Ssl::checkKey(sslKeyVar).testFlag(Ssl::NoError)) {
     qCritical() << "ServerConfig/SslKey needs to point to a X.509 private key in PEM format!";
     return;
   }    
