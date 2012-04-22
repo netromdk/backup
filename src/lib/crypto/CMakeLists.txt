@@ -8,6 +8,9 @@ SET( SOURCES
 
   Key.h
   Key.cpp
+
+  Digest.h
+  Digest.cpp
   )
 
 SET( HEADERS
