@@ -35,4 +35,31 @@ namespace crypto {
 
     return false;
   }
+
+  bool verify(const QByteArray &sig, const QByteArray &data, const QSslKey &key) {
+    const unsigned char *cdata = (const unsigned char*) data.constData(),
+      *csig = (const unsigned char*) sig.constData();
+    
+    switch (key.algorithm()) {
+    case QSsl::Rsa: {
+      RSA *rsa = getRsaKey(key);
+      if (!rsa) return false;
+      if (RSA_verify(NID_sha512, cdata, data.size(), csig, sig.size(), rsa)) {
+        return true;
+      }
+      break;
+    }
+
+    case QSsl::Dsa: {
+      DSA *dsa = getDsaKey(key);
+      if (!dsa) return false;
+      if (DSA_verify(NID_sha512, cdata, data.size(), csig, sig.size(), dsa)) {
+        return true;
+      }      
+      break;
+    }
+    }
+
+    return false;      
+  }
 }

@@ -13,7 +13,7 @@ namespace crypto {
   RSA *getRsaKey(const QSslKey &key);
 
   /**
-   * Retrieve raw DSA key from QSslKey. Also checks validity.
+   * Retrieve raw DSA key from QSslKey. 
    */  
   DSA *getDsaKey(const QSslKey &key);  
 }
