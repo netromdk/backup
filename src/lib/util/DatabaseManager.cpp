@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QFileInfo>
+#include <QSqlTableModel>
 #include <QCoreApplication>
 
 #include "DatabaseManager.h"
@@ -68,4 +69,29 @@ QStringList DatabaseManager::getTables() const {
 
 bool DatabaseManager::tableExists(const QString &name) const {
   return getTables().contains(name);
+}
+
+QSqlRecord DatabaseManager::getTableRecord(const QString &name) {
+  return db.record(name);
+}
+
+bool DatabaseManager::addTableRecords(const QString &name, const QList<QSqlRecord> &records) {
+  if (records.size() == 0) {
+    return false;
+  }
+
+  QSqlTableModel model;
+  model.setTable(name);
+
+  foreach (const QSqlRecord &record, records) {
+    // Append record to the end of the table.
+    model.insertRecord(-1, record);
+  }
+
+  model.submitAll();
+  return !hasError();
+}
+
+bool DatabaseManager::addTableRecord(const QString &name, const QSqlRecord &record) {
+  return addTableRecords(name, QList<QSqlRecord>() << record);
 }

@@ -1,9 +1,11 @@
 #ifndef DATABASE_MANAGER_H
 #define DATABASE_MANAGER_H
 
+#include <QList>
 #include <QObject>
 #include <QString>
 #include <QSqlError>
+#include <QSqlRecord>
 #include <QStringList>
 #include <QSqlDatabase>
 
@@ -13,7 +15,7 @@
 class DatabaseManager : public QObject {
 public:
   /**
-   * Get the manager instance. If calling this the first time during
+   * Get the manager instance - If calling this the first time during
    * runtime then the path has to be set to the database to load.
    */
   static DatabaseManager *getInstance(const QString &path = QString());
@@ -61,10 +63,26 @@ public:
   QStringList getTables() const;
 
   /**
-   * Check if table is exists.
+   * Check if table exists.
    */
-  bool tableExists(const QString &name) const; 
+  bool tableExists(const QString &name) const;
 
+  /**
+   * Get record of specified table. The record will consist of all
+   * columns (but not rows!) and their types and settings.
+   */
+  QSqlRecord getTableRecord(const QString &name);
+
+  /**
+   * Add records to the specified table.
+   */
+  bool addTableRecords(const QString &name, const QList<QSqlRecord> &records);  
+
+  /**
+   * Add a record to the specified table.
+   */
+  bool addTableRecord(const QString &name, const QSqlRecord &record);
+    
 private:
   DatabaseManager(const QString &path);
   
