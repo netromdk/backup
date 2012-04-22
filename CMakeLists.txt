@@ -32,6 +32,8 @@ FIND_PACKAGE( Qt4 4.8.1 COMPONENTS QtCore QtNetwork REQUIRED )
 INCLUDE( ${QT_USE_FILE} )
 ADD_DEFINITIONS( ${QT_DEFINITIONS})
 
+FIND_PACKAGE( OpenSsl 1.0.1 REQUIRED )
+
 # Add a target to generate API documentation with Doxygen.
 FIND_PACKAGE( Doxygen 1.8.0 )
 IF( DOXYGEN_FOUND )
@@ -65,6 +67,6 @@ MESSAGE( STATUS "BUILD_AGENT    = ${BUILD_AGENT}" )
 MESSAGE( STATUS "--------------------------------------------------" )
 
 IF( DOXYGEN_FOUND ) 
-MESSAGE( STATUS "Doxygen was found - Use 'doc' target to generate." )
-MESSAGE( STATUS "--------------------------------------------------" )
+  MESSAGE( STATUS "Doxygen was found - Use 'doc' target to generate." )
+  MESSAGE( STATUS "--------------------------------------------------" )
 ENDIF()
