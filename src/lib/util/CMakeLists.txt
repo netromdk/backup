@@ -9,6 +9,9 @@ SET( SOURCES
 
   Env.h
   Env.cpp
+
+  DatabaseManager.h
+  DatabaseManager.cpp
   )
 
 SET( HEADERS
@@ -17,6 +20,7 @@ SET( HEADERS
 SET( CORELIBS
   ${QT_LIBRARIES}
   ${QT_QTNETWORK_LIBRARY}
+  ${QT_QTSQL_LIBRARY}
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )

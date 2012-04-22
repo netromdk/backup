@@ -36,7 +36,7 @@ OPTION( BUILD_SERVER "Set to ON to build server program" ON )
 OPTION( BUILD_AGENT "Set to ON to build agent program" ON )
 
 # Dependencies.
-FIND_PACKAGE( Qt4 4.8.1 COMPONENTS QtCore QtXml QtNetwork REQUIRED )
+FIND_PACKAGE( Qt4 4.8.1 COMPONENTS QtCore QtXml QtNetwork QtSql REQUIRED )
 INCLUDE( ${QT_USE_FILE} )
 ADD_DEFINITIONS( ${QT_DEFINITIONS})
 
