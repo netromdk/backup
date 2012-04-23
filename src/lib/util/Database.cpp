@@ -4,27 +4,27 @@
 #include <QSqlTableModel>
 #include <QCoreApplication>
 
-#include "DatabaseManager.h"
+#include "Database.h"
 
-DatabaseManager *DatabaseManager::instance = NULL;
+Database *Database::instance = NULL;
 
-DatabaseManager *DatabaseManager::getInstance(const QString &path) {
+Database *Database::getInstance(const QString &path) {
   if (!instance) {
     if (path.isEmpty()) {
       return NULL;
     }
     
-    instance = new DatabaseManager(path);
+    instance = new Database(path);
   }
   
   return instance;
 }
 
-bool DatabaseManager::isSupported() {
+bool Database::isSupported() {
   return QSqlDatabase::isDriverAvailable("QSQLITE");
 }
 
-DatabaseManager::DatabaseManager(const QString &path) {
+Database::Database(const QString &path) {
   connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
 
   QFileInfo info(path);
@@ -43,39 +43,39 @@ DatabaseManager::DatabaseManager(const QString &path) {
   }
 }
 
-DatabaseManager::~DatabaseManager() {
+Database::~Database() {
   if (db.isOpen()) {
     db.close();
   }
 }
 
-void DatabaseManager::enableForeignKeys(bool enable) {
+void Database::enableForeignKeys(bool enable) {
   db.exec("PRAGMA foreign_keys = " + QString(enable ? "ON" : "OFF"));  
 }
 
-bool DatabaseManager::executeQuery(const QString &query) {
+bool Database::executeQuery(const QString &query) {
   db.exec(query);
   return !hasError();
 }
 
-bool DatabaseManager::dropTable(const QString &name) {
+bool Database::dropTable(const QString &name) {
   db.exec("DROP TABLE IF EXISTS " + name);
   return !hasError();
 }
 
-QStringList DatabaseManager::getTables() const {
+QStringList Database::getTables() const {
   return db.tables();
 }
 
-bool DatabaseManager::tableExists(const QString &name) const {
+bool Database::tableExists(const QString &name) const {
   return getTables().contains(name);
 }
 
-QSqlRecord DatabaseManager::getTableRecord(const QString &name) {
+QSqlRecord Database::getTableRecord(const QString &name) {
   return db.record(name);
 }
 
-bool DatabaseManager::addTableRecords(const QString &name, const QList<QSqlRecord> &records) {
+bool Database::addTableRecords(const QString &name, const QList<QSqlRecord> &records) {
   if (records.size() == 0) {
     return false;
   }
@@ -92,6 +92,6 @@ bool DatabaseManager::addTableRecords(const QString &name, const QList<QSqlRecor
   return !hasError();
 }
 
-bool DatabaseManager::addTableRecord(const QString &name, const QSqlRecord &record) {
+bool Database::addTableRecord(const QString &name, const QSqlRecord &record) {
   return addTableRecords(name, QList<QSqlRecord>() << record);
 }

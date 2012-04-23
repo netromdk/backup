@@ -10,8 +10,8 @@ SET( SOURCES
   Env.h
   Env.cpp
 
-  DatabaseManager.h
-  DatabaseManager.cpp
+  Database.h
+  Database.cpp
   )
 
 SET( HEADERS

@@ -1,5 +1,5 @@
-#ifndef DATABASE_MANAGER_H
-#define DATABASE_MANAGER_H
+#ifndef DATABASE_H
+#define DATABASE_H
 
 #include <QList>
 #include <QObject>
@@ -12,20 +12,20 @@
 /**
  * Provides an interface to a SQLite 3.x database.
  */
-class DatabaseManager : public QObject {
+class Database : public QObject {
 public:
   /**
    * Get the manager instance - If calling this the first time during
    * runtime then the path has to be set to the database to load.
    */
-  static DatabaseManager *getInstance(const QString &path = QString());
+  static Database *getInstance(const QString &path = QString());
 
   /**
    * Checks that the SQLite driver is available.
    */
   static bool isSupported();
 
-  virtual ~DatabaseManager();
+  virtual ~Database();
 
   /**
    * Determine whether the database connection is open and valid.
@@ -84,10 +84,10 @@ public:
   bool addTableRecord(const QString &name, const QSqlRecord &record);
     
 private:
-  DatabaseManager(const QString &path);
+  Database(const QString &path);
   
-  static DatabaseManager *instance;
+  static Database *instance;
   QSqlDatabase db;
 };
 
-#endif // DATABASE_MANAGER_H
+#endif // DATABASE_H
