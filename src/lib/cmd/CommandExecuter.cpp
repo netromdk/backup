@@ -64,7 +64,7 @@ bool CommandExecuter::execute(const QString &input) {
               options[option->getLongName()] = var;
             }
             else if ((pos + 1) >= tokens.size()) {
-              qWarning() << "Option" << token << "requires input but none given.";
+              qWarning() << "Option" << token << "requires input but none was given.";
               return false;
             }
             else {
@@ -176,49 +176,49 @@ bool CommandExecuter::checkOptionType(const QString &token, CommandOption *optio
   bool ok;
   
   switch (option->getType()) {
-  case CommandOption::NoType:
+  case NoType:
     return false;
 
-  case CommandOption::Bool: 
+  case Bool: 
     if (lowTok != "true" && lowTok != "false") {
       return false;
     }
     var = (lowTok == "true");
     break;
 
-  case CommandOption::Char:
+  case Char:
     if (token.size() > 1) {
       return false;
     }
     var = token[0];
     break;
 
-  case CommandOption::Double: 
+  case Double: 
     var = token.toDouble(&ok);
     if (!ok) return false;
     break;
 
-  case CommandOption::Int: 
+  case Int: 
     var = token.toInt(&ok);
     if (!ok) return false;
     break;
 
-  case CommandOption::UInt: 
+  case UInt: 
     var = token.toUInt(&ok);
     if (!ok) return false;
     break;
 
-  case CommandOption::LongLong: 
+  case LongLong: 
     var = token.toLongLong(&ok);
     if (!ok) return false;
     break;
 
-  case CommandOption::ULongLong: 
+  case ULongLong: 
     var = token.toULongLong(&ok);
     if (!ok) return false;
     break;
 
-  case CommandOption::String: 
+  case String: 
     var = token;
     break;                    
   }

@@ -13,6 +13,8 @@ SET( SOURCES
   CommandOption.cpp
 
   PositionalCommand.h
+
+  CommandType.h
   )
 
 SET( HEADERS

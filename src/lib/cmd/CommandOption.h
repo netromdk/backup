@@ -5,6 +5,8 @@
 #include <QString>
 #include <QVariant>
 
+#include "CommandType.h"
+
 typedef QMap<QString, QVariant> OptionMap;
 
 /**
@@ -17,38 +19,23 @@ typedef QMap<QString, QVariant> OptionMap;
 class CommandOption {
 public:
   /**
-   * Supported option types for input.
-   */ 
-  enum Type {
-    NoType = 0,
-    Bool = QVariant::Bool,
-    Char = QVariant::Char,
-    Double = QVariant::Double,
-    Int = QVariant::Int, 
-    UInt = QVariant::UInt,    
-    LongLong = QVariant::LongLong,
-    ULongLong = QVariant::ULongLong,
-    String = QVariant::String
-  };
-
-  /**
    * Constructs an option with a long name and an optional short name
    * and input type.
    */ 
   CommandOption(const QString &longName, const QString &shortName = QString(),
-                Type type = NoType);
+                CommandType type = NoType);
 
   QString getLongName() const { return longName; }
   
   QString getShortName() const { return shortName; }
   bool hasShortName() const { return !shortName.isEmpty(); }
   
-  Type getType() const { return type; }
+  CommandType getType() const { return type; }
   bool requiresInput() const { return type != NoType; }  
 
 private:
   QString longName, shortName;
-  Type type;
+  CommandType type;
 };
 
 #endif // COMMAND_OPTION_H
