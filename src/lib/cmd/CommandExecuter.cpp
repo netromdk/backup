@@ -17,7 +17,85 @@ bool CommandExecuter::execute(const QString &input) {
   QStringList tokens = parse(input);
   qDebug() << "tokens:" << tokens;
 
-  return traverse(tree, tokens);
+  CommandTreeNode *node = traverse(tree, tokens);
+  if (!node) {
+    qWarning() << "Invalid command" << tokens[lastToken];
+    return false;
+  }
+  qDebug() << "got sub node:" << node->getName();
+
+  // Check if no further tokens exist.
+  if (lastToken == tokens.size() - 1) {
+    node->execute(options, posCmds, extData);
+    return true;
+  }
+
+  int pos = ++lastToken;
+  QString token;
+  bool match;
+  for (; pos < tokens.size(); pos++) {
+    token = tokens[pos];
+    match = false;
+
+    // Option?
+    QStringList optToks;
+    if (parseOption(token, optToks)) {
+      qDebug() << token << "->" << optToks;
+      QString optName = optToks[0];
+
+      foreach (CommandOption *option, node->getOptions()) {
+        if (option->getLongName() == optName || option->getShortName() == optName) {
+          if (options.keys().contains(option->getLongName())) {
+            qWarning() << "Duplicate option" << token;
+            return false;
+          }
+
+          if (!option->requiresInput()) {
+            options[option->getLongName()];
+          }
+          else {
+            QVariant var;
+            if (optToks.size() == 2) {
+              if (!checkOptionType(optToks[1], option, var)) {
+                qWarning() << "Invalid input type for option" << token;
+                return false;                
+              }
+
+              options[option->getLongName()] = var;
+            }
+            else if ((pos + 1) >= tokens.size()) {
+              qWarning() << "Option" << token << "requires input but none given.";
+              return false;
+            }
+            else {
+              if (!checkOptionType(tokens[pos + 1], option, var)) {
+                qWarning() << "Invalid input type for option" << token;
+                return false;
+              }
+
+              options[option->getLongName()] = var;
+              pos++;
+            }
+          }
+
+          match = true;
+          continue;
+        }
+      }
+    }
+
+    // Positional command?
+    
+
+    
+    if (!match) {
+      qWarning() << "Invalid token" << token;
+      return false;
+    }
+  }
+
+  node->execute(options, posCmds, extData);
+  return true;
 }
 
 QStringList CommandExecuter::parse(const QString &input) {
@@ -26,45 +104,124 @@ QStringList CommandExecuter::parse(const QString &input) {
 }
 
 void CommandExecuter::clearState() {
+  lastToken = 0;
   options.clear();
   posCmds.clear();
   extData.clear();
 }
 
-bool CommandExecuter::traverse(CommandTreeNode *node, QStringList &tokens,
-                               uint pos, bool done) {
-  if (done) {
-    node->execute(options, posCmds, extData);
-    clearState();
-    return true;
+CommandTreeNode *CommandExecuter::traverse(CommandTreeNode *node,
+                                           QStringList &tokens, uint pos) {
+  if (pos >= tokens.size()) {
+    return node;
   }
   
-  if (pos >= tokens.size()) {
+  QString token = tokens[pos];
+  lastToken = pos;
+
+  if (node->getName() == token) {
+    return node;
+  }
+
+  foreach (CommandTreeNode *n, node->getNodes()) {
+    if (n->getName() == token) {
+      // If the node has no children then return at once so that the
+      // extra tokens can be checked as options etc..
+      if (n->getNodes().size() == 0) {
+        return n;
+      }
+      
+      return traverse(n, tokens, pos + 1);
+    }
+  }
+
+  return NULL;
+}
+
+bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
+  qDebug() << "parse" << token;
+  
+  if (token.isEmpty()) {
     return false;
   }
 
-  QString token = tokens[pos];
-  qDebug() << "->" << token;
+  if (token.startsWith("--")) {
+    token = token.mid(2);
 
-  pos++;
-
-  CommandTreeNodeList nodes;
-  if (!node->getName().isEmpty()) {
-    nodes.append(node);
-  }
-  nodes.append(node->getNodes());      
-  
-  foreach (CommandTreeNode *n, nodes) {
-    // Is it a command?
-    if (n->getName() == token) {
-      return traverse(n, tokens, pos, pos >= tokens.size());
+    // TODO: better parsing.. If it's a string, for instance, using
+    // string literals and a = inside...
+    QStringList elms = token.split("=", QString::SkipEmptyParts);
+    if (elms.size() == 2) {
+      optToks.append(elms);
+    }
+    else {
+      optToks.append(elms[0]);
     }
 
-    // Option?
-
-    // Positional Command?
+    return true;
   }
 
-  qWarning() << "Not valid token" << token;
+  else if (token.startsWith("-")) {
+    token = token.mid(1);
+    optToks.append(token);
+    return true;
+  }
+
   return false;
+}
+
+bool CommandExecuter::checkOptionType(const QString &token, CommandOption *option,
+                                      QVariant &var) {
+  QString lowTok = token.toLower();
+  bool ok;
+  
+  switch (option->getType()) {
+  case CommandOption::NoType:
+    return false;
+
+  case CommandOption::Bool: 
+    if (lowTok != "true" && lowTok != "false") {
+      return false;
+    }
+    var = (lowTok == "true");
+    break;
+
+  case CommandOption::Char:
+    if (token.size() > 1) {
+      return false;
+    }
+    var = token[0];
+    break;
+
+  case CommandOption::Double: 
+    var = token.toDouble(&ok);
+    if (!ok) return false;
+    break;
+
+  case CommandOption::Int: 
+    var = token.toInt(&ok);
+    if (!ok) return false;
+    break;
+
+  case CommandOption::UInt: 
+    var = token.toUInt(&ok);
+    if (!ok) return false;
+    break;
+
+  case CommandOption::LongLong: 
+    var = token.toLongLong(&ok);
+    if (!ok) return false;
+    break;
+
+  case CommandOption::ULongLong: 
+    var = token.toULongLong(&ok);
+    if (!ok) return false;
+    break;
+
+  case CommandOption::String: 
+    var = token;
+    break;                    
+  }
+  
+  return true;
 }

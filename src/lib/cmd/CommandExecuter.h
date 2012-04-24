@@ -17,12 +17,14 @@ public:
 private:
   QStringList parse(const QString &input);
   void clearState();
-  bool traverse(CommandTreeNode *node, QStringList &tokens, uint pos = 0,
-                bool done = false);
+  CommandTreeNode *traverse(CommandTreeNode *node, QStringList &tokens, uint pos = 0);
+  bool parseOption(QString token, QStringList &optToks);
+  bool checkOptionType(const QString &token, CommandOption *option, QVariant &var);
   
   CommandTreeNode *tree;
 
   // State for executing commands.
+  int lastToken;
   OptionMap options;
   QStringList posCmds, extData;  
 };
