@@ -23,24 +23,15 @@ bool CommandExecuter::execute(const QString &input) {
     qWarning() << "Invalid command" << tokens[lastToken];
     return false;
   }
-  qDebug() << "got sub node:" << node->getName();
-
-  // Check if no further tokens exist.
-  if (lastToken == tokens.size() - 1) {
-    node->execute(options, posCmds, extData);
-    return true;
-  }
 
   int pos = ++lastToken, optMisses = 0;
   QString token;
-  bool match = false;
   for (; pos < tokens.size(); pos++) {
     token = tokens[pos];
 
     // Option?
     QStringList optToks;
     if (parseOption(token, optToks)) {
-      qDebug() << token << "->" << optToks;
       QString optName = optToks[0];
 
       foreach (CommandOption *option, node->getOptions()) {
@@ -78,7 +69,6 @@ bool CommandExecuter::execute(const QString &input) {
             }
           }
 
-          match = true;
           continue;
         }
       }
@@ -88,22 +78,13 @@ bool CommandExecuter::execute(const QString &input) {
     }
   }
 
-  if (!match) {
-    qWarning() << "Invalid token" << token;
-    return false;
-  }
-
-  pos -= optMisses;
-  qDebug() << pos << tokens.size();
+  int posOffset = (pos - optMisses);
 
   // Positional command?
   PositionalCommandList posCmdList = node->getPosCmds();
   int posMatched = 0;
-  for (int j = 0; j < posCmdList.size() && (j + pos) < tokens.size(); j++) {
-    token = tokens[j + pos];
-    qDebug() << j << (j + pos) << token;
-    
-    qDebug() << "pos cmd?" << token;
+  for (int j = 0; j < posCmdList.size() && (j + posOffset) < tokens.size(); j++) {
+    token = tokens[j + posOffset];
     PositionalCommand *cmd = posCmdList[j];
     
     QVariant var;
@@ -119,6 +100,11 @@ bool CommandExecuter::execute(const QString &input) {
   if (posMatched != posCmdList.size()) {
     qWarning() << "Positional command" << posCmdList[posMatched]->getName() << "required";
     return false;
+  }
+
+  // Extraneous data?
+  for (int h = posOffset + posMatched; h < tokens.size(); h++) {
+    extData.append(tokens[h]);
   }
 
   node->execute(options, posCmds, extData);
@@ -166,8 +152,6 @@ CommandTreeNode *CommandExecuter::traverse(CommandTreeNode *node,
 }
 
 bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
-  qDebug() << "parse" << token;
-  
   if (token.isEmpty()) {
     return false;
   }
