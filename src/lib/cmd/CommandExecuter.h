@@ -19,7 +19,7 @@ private:
   void clearState();
   CommandTreeNode *traverse(CommandTreeNode *node, QStringList &tokens, uint pos = 0);
   bool parseOption(QString token, QStringList &optToks);
-  bool checkOptionType(const QString &token, CommandOption *option, QVariant &var);
+  bool checkType(const QString &token, CommandType type, QVariant &var);
   
   CommandTreeNode *tree;
 

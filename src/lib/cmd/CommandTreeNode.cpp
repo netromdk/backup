@@ -1,6 +1,8 @@
 #include <QtAlgorithms>
 
 #include "CommandTreeNode.h"
+#include "CommandFunction.h"
+#include "PositionalCommand.h"
 
 CommandTreeNode::CommandTreeNode(const QString &name, CommandFunction *func)
   : name(name), func(func)
@@ -20,6 +22,10 @@ void CommandTreeNode::addNode(CommandTreeNode *node) {
 
 void CommandTreeNode::addOption(CommandOption *option) {
   options.append(option);
+}
+
+void CommandTreeNode::addPosCmd(PositionalCommand *posCmd) {
+  posCmds.append(posCmd);
 }
 
 void CommandTreeNode::print(QDebug dbg, int depth) const {
@@ -49,6 +55,13 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
       dbg.nospace() << ")";
     }
     dbg << "\n";
+  }
+
+  // Positional commands
+  foreach (PositionalCommand *cmd, posCmds) {
+    dbg.nospace() << qPrintable(pad) << "<" << qPrintable(cmd->getName()) << ">"
+                  << " (" << QVariant::typeToName((QVariant::Type) cmd->getType())
+                  << " type)\n";
   }
 
   // Nodes

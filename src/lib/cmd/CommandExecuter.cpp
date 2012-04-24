@@ -2,6 +2,7 @@
 
 #include "CommandExecuter.h"
 #include "CommandTreeNode.h"
+#include "PositionalCommand.h"
 
 CommandExecuter::CommandExecuter(CommandTreeNode *tree) : tree(tree) {
   
@@ -30,12 +31,11 @@ bool CommandExecuter::execute(const QString &input) {
     return true;
   }
 
-  int pos = ++lastToken;
+  int pos = ++lastToken, optMisses = 0;
   QString token;
-  bool match;
+  bool match = false;
   for (; pos < tokens.size(); pos++) {
     token = tokens[pos];
-    match = false;
 
     // Option?
     QStringList optToks;
@@ -56,7 +56,7 @@ bool CommandExecuter::execute(const QString &input) {
           else {
             QVariant var;
             if (optToks.size() == 2) {
-              if (!checkOptionType(optToks[1], option, var)) {
+              if (!checkType(optToks[1], option->getType(), var)) {
                 qWarning() << "Invalid input type for option" << token;
                 return false;                
               }
@@ -68,7 +68,7 @@ bool CommandExecuter::execute(const QString &input) {
               return false;
             }
             else {
-              if (!checkOptionType(tokens[pos + 1], option, var)) {
+              if (!checkType(tokens[pos + 1], option->getType(), var)) {
                 qWarning() << "Invalid input type for option" << token;
                 return false;
               }
@@ -83,15 +83,42 @@ bool CommandExecuter::execute(const QString &input) {
         }
       }
     }
+    else {
+      optMisses++;
+    }
+  }
 
-    // Positional command?
-    
+  if (!match) {
+    qWarning() << "Invalid token" << token;
+    return false;
+  }
 
+  pos -= optMisses;
+  qDebug() << pos << tokens.size();
+
+  // Positional command?
+  PositionalCommandList posCmdList = node->getPosCmds();
+  int posMatched = 0;
+  for (int j = 0; j < posCmdList.size() && (j + pos) < tokens.size(); j++) {
+    token = tokens[j + pos];
+    qDebug() << j << (j + pos) << token;
     
-    if (!match) {
-      qWarning() << "Invalid token" << token;
+    qDebug() << "pos cmd?" << token;
+    PositionalCommand *cmd = posCmdList[j];
+    
+    QVariant var;
+    if (!checkType(token, cmd->getType(), var)) {
+      qWarning() << "Invalid type for positional command" << posCmdList[j]->getName();
       return false;
     }
+
+    posCmds.append(token);
+    posMatched++;    
+  }
+
+  if (posMatched != posCmdList.size()) {
+    qWarning() << "Positional command" << posCmdList[posMatched]->getName() << "required";
+    return false;
   }
 
   node->execute(options, posCmds, extData);
@@ -100,7 +127,7 @@ bool CommandExecuter::execute(const QString &input) {
 
 QStringList CommandExecuter::parse(const QString &input) {
   // TODO: Improve this one!!
-  return input.split(" ");
+  return input.split(" ", QString::SkipEmptyParts);
 }
 
 void CommandExecuter::clearState() {
@@ -170,12 +197,11 @@ bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
   return false;
 }
 
-bool CommandExecuter::checkOptionType(const QString &token, CommandOption *option,
-                                      QVariant &var) {
+bool CommandExecuter::checkType(const QString &token, CommandType type, QVariant &var) {
   QString lowTok = token.toLower();
   bool ok;
   
-  switch (option->getType()) {
+  switch (type) {
   case NoType:
     return false;
 

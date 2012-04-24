@@ -13,6 +13,7 @@ SET( SOURCES
   CommandOption.cpp
 
   PositionalCommand.h
+  PositionalCommand.cpp
 
   CommandType.h
   )
