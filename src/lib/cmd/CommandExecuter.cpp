@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include "CommandOption.h"
 #include "CommandExecuter.h"
 #include "CommandTreeNode.h"
 #include "PositionalCommand.h"
@@ -93,7 +94,7 @@ bool CommandExecuter::execute(const QString &input) {
       return false;
     }
 
-    posCmds.append(token);
+    posCmds.append(var);
     posMatched++;    
   }
 

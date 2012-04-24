@@ -2,8 +2,8 @@
 #define COMMAND_FUNCTION_H
 
 #include <QStringList>
-
-#include "CommandOption.h"
+#include <QVariantMap>
+#include <QVariantList>
 
 class CommandTreeNode;
 
@@ -19,8 +19,8 @@ public:
    * Execute is called on success. The node will point to the last sub
    * command of the input.
    */
-  virtual void execute(CommandTreeNode *node, OptionMap &options,
-                       QStringList &posCmds, QStringList &extData) = 0;
+  virtual void execute(CommandTreeNode *node, QVariantMap &options,
+                       QVariantList &posCmds, QStringList &extData) = 0;
 };
 
 #endif // COMMAND_FUNCTION_H

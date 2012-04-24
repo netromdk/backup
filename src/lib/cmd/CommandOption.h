@@ -7,8 +7,6 @@
 
 #include "CommandType.h"
 
-typedef QMap<QString, QVariant> OptionMap;
-
 /**
  * Provides a command option which has a long name (--example) and an
  * optional short name (-e). An option can also have a value

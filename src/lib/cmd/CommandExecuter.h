@@ -3,8 +3,9 @@
 
 #include <QString>
 #include <QStringList>
+#include <QVariantMap>
 
-#include "CommandOption.h"
+#include "CommandType.h"
 
 class CommandTreeNode;
 
@@ -25,8 +26,9 @@ private:
 
   // State for executing commands.
   int lastToken;
-  OptionMap options;
-  QStringList posCmds, extData;  
+  QVariantMap options;
+  QVariantList posCmds;
+  QStringList extData;  
 };
 
 #endif // COMMAND_EXECUTER_H

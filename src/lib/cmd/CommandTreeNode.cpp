@@ -1,5 +1,6 @@
 #include <QtAlgorithms>
 
+#include "CommandOption.h"
 #include "CommandTreeNode.h"
 #include "CommandFunction.h"
 #include "PositionalCommand.h"
@@ -71,7 +72,7 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
   }
 }
 
-void CommandTreeNode::execute(OptionMap &options, QStringList &posCmds, QStringList &extData) {
+void CommandTreeNode::execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData) {
   if (hasFunction()) {
     func->execute(this, options, posCmds, extData);
   }

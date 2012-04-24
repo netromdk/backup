@@ -5,9 +5,10 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+#include <QVariantMap>
+#include <QVariantList>
 
-#include "CommandOption.h"
-
+class CommandOption;
 class CommandFunction;
 class CommandTreeNode;
 class PositionalCommand;
@@ -35,7 +36,7 @@ public:
   void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
   bool hasFunction() const { return func != NULL; }
-  void execute(OptionMap &options, QStringList &posCmds, QStringList &extData);
+  void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData);
 
 private:
   QString name;
