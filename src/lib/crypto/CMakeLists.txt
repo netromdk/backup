@@ -3,11 +3,11 @@ SET( NAME crypto )
 INCLUDE_DIRECTORIES( ${OPENSSL_INCLUDE_DIR} )
 
 SET( SOURCES
-  Sign.h
-  Sign.cpp
-
   Key.h
   Key.cpp
+
+  Sign.h
+  Sign.cpp
 
   Digest.h
   Digest.cpp

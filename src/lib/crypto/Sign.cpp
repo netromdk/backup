@@ -39,8 +39,8 @@ namespace crypto {
 
   bool verify(const QByteArray &sig, const QByteArray &data, const QSslKey &key,
               DigestAlgorithm alg) {
-    const unsigned char *cdata = (const unsigned char*) data.constData(),
-      *csig = (const unsigned char*) sig.constData();
+    unsigned char *cdata = (unsigned char*) data.constData(),
+      *csig = (unsigned char*) sig.constData();
     
     switch (key.algorithm()) {
     case QSsl::Rsa: {
