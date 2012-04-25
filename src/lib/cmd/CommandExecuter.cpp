@@ -32,12 +32,22 @@ bool CommandExecuter::execute(const QString &input) {
     token = tokens[pos];
 
     // Option?
+    bool longOpt;
     QStringList optToks;
-    if (parseOption(token, optToks)) {
+    if (parseOption(token, longOpt, optToks)) {
       QString optName = optToks[0];
 
       foreach (CommandOption *option, node->getOptions()) {
         if (option->getLongName() == optName || option->getShortName() == optName) {
+          if (longOpt && option->getShortName() == optName) {
+            qWarning() << "Long option" << token << "is only valid as a short option";
+            return false;
+          }
+          else if (!longOpt && option->getLongName() == optName) {
+            qWarning() << "Short option" << token << "is only valid as a long option";
+            return false;
+          }          
+          
           if (options.keys().contains(option->getLongName())) {
             qWarning() << "Duplicate option" << token;
             return false;
@@ -176,15 +186,19 @@ CommandTreeNode *CommandExecuter::traverse(CommandTreeNode *node,
   return NULL;
 }
 
-bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
+bool CommandExecuter::parseOption(QString token, bool &longOpt, QStringList &optToks) {
   if (token.isEmpty()) {
     return false;
   }
 
   if (token.startsWith("--")) {
-    // TODO: check first char after -- isn't another -
-    
     token = token.mid(2);
+
+    // Ignore if actual token is empty or if it actually started with
+    // three dashes.
+    if (token.isEmpty() || token[0] == '-') {
+      return false;
+    }
 
     // TODO: better parsing.. If it's a string, for instance, using
     // string literals and a = inside...
@@ -196,14 +210,14 @@ bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
       optToks.append(elms[0]);
     }
 
+    longOpt = true;
     return true;
   }
 
   else if (token.startsWith("-")) {
-    // TODO: check first char after - isn't another -
-    
     token = token.mid(1);
     optToks.append(token);
+    longOpt = false;    
     return true;
   }
 
