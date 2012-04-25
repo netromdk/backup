@@ -15,8 +15,6 @@ bool CommandExecuter::execute(const QString &input) {
 
   qDebug() << "input:" << input;
   
-  // TODO: Error handling about parsing (like missing string
-  // literals).
   QStringList tokens = parse(input);
   qDebug() << "tokens:" << tokens;
 
@@ -123,7 +121,7 @@ bool CommandExecuter::execute(const QString &input) {
   return true;
 }
 
-QStringList CommandExecuter::parse(const QString &input) {
+QStringList CommandExecuter::parse(const QString &input, bool ignoreLongOpt) {
   // Parse tokens and account for string literals (single and double
   // quotes) around tokens spanned by white space, for instance.
   QRegExp exp("(?:(?:\")(.+)(?:\")|(?:\')(.+)(?:\'))");
@@ -136,9 +134,17 @@ QStringList CommandExecuter::parse(const QString &input) {
     if (tok.isEmpty()) {
       tok = exp.capturedTexts()[2];
     }
-    
+
     tokens.append(input.mid(oldPos, pos - oldPos).split(" ", QString::SkipEmptyParts));
-    tokens.append(tok);
+
+    // If it was a long option value then leave it be for now.
+    if (ignoreLongOpt && pos > 0 && input[pos-1] == '=') {
+      tokens[tokens.size() - 1] += "\"" + tok + "\"";
+    }
+    else {
+      tokens.append(tok);
+    }
+      
     pos += exp.matchedLength();
     oldPos = pos;    
   }
@@ -194,20 +200,51 @@ bool CommandExecuter::parseOption(QString token, bool &longOpt, QStringList &opt
   if (token.startsWith("--")) {
     token = token.mid(2);
 
-    // Ignore if actual token is empty or if it actually started with
-    // three dashes.
+    // Ignore if actual token was empty or started with three dashes.
     if (token.isEmpty() || token[0] == '-') {
       return false;
     }
 
-    // TODO: better parsing.. If it's a string, for instance, using
-    // string literals and a = inside...
-    QStringList elms = token.split("=", QString::SkipEmptyParts);
-    if (elms.size() == 2) {
-      optToks.append(elms);
+    QStringList toks = parse(token, false);
+
+    // Try splitting with = if no string literals were present.
+    bool eqSep = false;
+    if (toks.size() == 1) {
+      toks.clear();
+
+      int pos = token.indexOf("=");
+      if (pos != -1) {
+        toks.append(token.mid(0, pos));
+
+        // Check that the value after the = char is not empty.
+        QString tmp = token.mid(pos + 1);
+        if (!tmp.isEmpty()) {
+          toks.append(tmp);
+        }
+        else return false;
+      }
+      
+      eqSep = true;
+    }
+    
+    if (toks[0].endsWith("=")) {
+      if (toks.size() == 1) {
+        return false;
+      }
+      else {
+        // Remove = char from option.
+        token = toks.takeFirst();
+        token.chop(1);
+        
+        optToks.append(token);
+        optToks.append(toks);
+      }
+    }
+    else if (eqSep) {
+      optToks = toks;
     }
     else {
-      optToks.append(elms[0]);
+      optToks.append(toks[0]);
     }
 
     longOpt = true;
@@ -227,6 +264,8 @@ bool CommandExecuter::parseOption(QString token, bool &longOpt, QStringList &opt
 bool CommandExecuter::checkType(const QString &token, CommandType type, QVariant &var) {
   QString lowTok = token.toLower();
   bool ok;
+
+  qDebug() << "check" << token << (int) type;
   
   switch (type) {
   case NoType:

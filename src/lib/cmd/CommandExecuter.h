@@ -16,7 +16,7 @@ public:
   bool execute(const QString &input);
 
 private:
-  QStringList parse(const QString &input);
+  QStringList parse(const QString &input, bool ignoreLongOpt = true);
   void clearState();
   CommandTreeNode *traverse(CommandTreeNode *node, QStringList &tokens, uint pos = 0);
   bool parseOption(QString token, bool &longOpt, QStringList &optToks);
