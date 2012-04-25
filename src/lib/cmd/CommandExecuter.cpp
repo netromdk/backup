@@ -265,17 +265,15 @@ bool CommandExecuter::checkType(const QString &token, CommandType type, QVariant
   QString lowTok = token.toLower();
   bool ok;
 
-  qDebug() << "check" << token << (int) type;
-  
   switch (type) {
   case NoType:
     return false;
 
   case Bool: 
-    if (lowTok != "true" && lowTok != "false") {
+    if (lowTok != "true" && lowTok != "1" && lowTok != "false" && lowTok != "0") {
       return false;
     }
-    var = (lowTok == "true");
+    var = (lowTok == "true" || lowTok == "1");
     break;
 
   case Char:
