@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QRegExp>
 
 #include "CommandOption.h"
 #include "CommandExecuter.h"
@@ -113,8 +114,31 @@ bool CommandExecuter::execute(const QString &input) {
 }
 
 QStringList CommandExecuter::parse(const QString &input) {
-  // TODO: Improve this one!!
-  return input.split(" ", QString::SkipEmptyParts);
+  // Parse tokens and account for string literals (single and double
+  // quotes) around tokens spanned by white space, for instance.
+  QRegExp exp("(?:(?:\")(.+)(?:\")|(?:\')(.+)(?:\'))");
+  exp.setMinimal(true);
+
+  QStringList tokens;
+  int pos = 0, oldPos = 0;
+  while ((pos = exp.indexIn(input, pos)) != -1) {
+    QString tok = exp.capturedTexts()[1];
+    if (tok.isEmpty()) {
+      tok = exp.capturedTexts()[2];
+    }
+    
+    tokens.append(input.mid(oldPos, pos - oldPos).split(" ", QString::SkipEmptyParts));
+    tokens.append(tok);
+    pos += exp.matchedLength();
+    oldPos = pos;    
+  }
+
+  // Split any leftovers normally.
+  if (oldPos < input.size()) {
+    tokens.append(input.mid(oldPos).split(" ", QString::SkipEmptyParts));    
+  }
+
+  return tokens;
 }
 
 void CommandExecuter::clearState() {
@@ -158,6 +182,8 @@ bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
   }
 
   if (token.startsWith("--")) {
+    // TODO: check first char after -- isn't another -
+    
     token = token.mid(2);
 
     // TODO: better parsing.. If it's a string, for instance, using
@@ -174,6 +200,8 @@ bool CommandExecuter::parseOption(QString token, QStringList &optToks) {
   }
 
   else if (token.startsWith("-")) {
+    // TODO: check first char after - isn't another -
+    
     token = token.mid(1);
     optToks.append(token);
     return true;
