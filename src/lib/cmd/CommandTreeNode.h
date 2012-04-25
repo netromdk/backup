@@ -24,6 +24,10 @@ public:
 
   QString getName() const { return name; }
 
+  void setDescription(const QString &desc) { this->desc = desc; }
+  QString getDescription() const { return desc; }
+  bool hasDescription() const { return !desc.isEmpty(); }
+
   void addNode(CommandTreeNode *node);
   CommandTreeNodeList getNodes() const { return nodes; }
 
@@ -39,7 +43,7 @@ public:
   void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData);
 
 private:
-  QString name;
+  QString name, desc;
   CommandFunction *func;
   CommandTreeNodeList nodes;
   CommandOptionList options;

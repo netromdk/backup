@@ -37,7 +37,14 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
 
   // Name
   QString n = (name.isEmpty() ? "<no name>" : name);
-  dbg.nospace() << qPrintable(pad) << qPrintable(n) << "\n";
+  dbg.nospace() << qPrintable(pad) << qPrintable(n);
+
+  // Description
+  if (hasDescription()) {
+    dbg.nospace() << " # " << qPrintable(desc);
+  }
+
+  dbg << "\n";
 
   // Options
   pad += "  ";
@@ -55,6 +62,9 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
       }
       dbg.nospace() << ")";
     }
+    if (option->hasDescription()) {
+      dbg.nospace() << " # " << qPrintable(option->getDescription());
+    }
     dbg << "\n";
   }
 
@@ -62,7 +72,11 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
   foreach (PositionalCommand *cmd, posCmds) {
     dbg.nospace() << qPrintable(pad) << "<" << qPrintable(cmd->getName()) << ">"
                   << " (" << QVariant::typeToName((QVariant::Type) cmd->getType())
-                  << " type)\n";
+                  << " type)";
+    if (cmd->hasDescription()) {
+      dbg.nospace() << " # " << qPrintable(cmd->getDescription());
+    }
+    dbg << "\n";
   }
 
   // Nodes

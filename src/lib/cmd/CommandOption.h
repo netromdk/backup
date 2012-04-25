@@ -29,10 +29,14 @@ public:
   bool hasShortName() const { return !shortName.isEmpty(); }
   
   CommandType getType() const { return type; }
-  bool requiresInput() const { return type != NoType; }  
+  bool requiresInput() const { return type != NoType; }
+
+  void setDescription(const QString &desc) { this->desc = desc; }
+  QString getDescription() const { return desc; }
+  bool hasDescription() const { return !desc.isEmpty(); }
 
 private:
-  QString longName, shortName;
+  QString longName, shortName, desc;
   CommandType type;
 };
 

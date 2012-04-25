@@ -12,8 +12,12 @@ public:
   QString getName() const { return name; }
   CommandType getType() const { return type; }
 
+  void setDescription(const QString &desc) { this->desc = desc; }
+  QString getDescription() const { return desc; }
+  bool hasDescription() const { return !desc.isEmpty(); }  
+
 private:
-  QString name;
+  QString name, desc;
   CommandType type;
 };
 
