@@ -1,6 +1,7 @@
 #include <QRegExp>
 #include <QHostAddress>
 
+#include "Env.h"
 #include "Utility.h"
 
 bool Utility::checkHostName(const QString &host) {
@@ -16,4 +17,16 @@ bool Utility::checkIP(const QString &ip) {
 
 bool Utility::checkHostOrIP(const QString &str) {
   return checkHostName(str) || checkIP(str);
+}
+
+QString Utility::getUserName() {
+  QString user;
+  
+#ifdef WIN
+  user = Env::get("%USERNAME%");
+#elif UNIX
+  user = Env::get("USER");
+#endif
+  
+  return user;
 }

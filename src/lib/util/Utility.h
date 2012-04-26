@@ -22,6 +22,11 @@ public:
    * Check if input is a valid host name or an IPv4 or IPv6 address.
    */  
   static bool checkHostOrIP(const QString &str);
+
+  /**
+   * Get the user name of the current user.
+   */
+  static QString getUserName();
 };
 
 #endif // UTILITY_H
