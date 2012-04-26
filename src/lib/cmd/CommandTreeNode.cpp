@@ -51,16 +51,28 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
   foreach (CommandOption *option, options) {
     dbg.nospace() << qPrintable(pad) << "--" << qPrintable(option->getLongName());
     const char *typ = NULL;
-    if (option->requiresInput()) {
+    if (option->takesInput()) {
       typ = QVariant::typeToName((QVariant::Type) option->getType());
+      if (option->isInputOptional()) {
+        dbg.nospace() << "(";
+      }
       dbg.nospace() << "=<" << typ << ">";
+      if (option->isInputOptional()) {
+        dbg.nospace() << ")";
+      }      
     }
     if (option->hasShortName()) {
-      dbg.nospace() << " (" << "-" << qPrintable(option->getShortName());
+      dbg.nospace() << " | " << "-" << qPrintable(option->getShortName());
       if (typ) {
-        dbg.nospace() << " <" << typ << ">";
+        dbg.nospace() << " ";
+        if (option->isInputOptional()) {
+          dbg.nospace() << "(";
+        }
+        dbg.nospace() << "<" << typ << ">";
+        if (option->isInputOptional()) {
+          dbg.nospace() << ")";
+        }        
       }
-      dbg.nospace() << ")";
     }
     if (option->hasDescription()) {
       dbg.nospace() << " # " << qPrintable(option->getDescription());

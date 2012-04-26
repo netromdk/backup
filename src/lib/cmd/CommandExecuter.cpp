@@ -51,7 +51,7 @@ bool CommandExecuter::execute(const QString &input) {
             return false;
           }
 
-          if (!option->requiresInput()) {
+          if (!option->takesInput()) {
             options[option->getLongName()];
           }
           else {
@@ -64,11 +64,11 @@ bool CommandExecuter::execute(const QString &input) {
 
               options[option->getLongName()] = var;
             }
-            else if ((pos + 1) >= tokens.size()) {
+            else if (!option->isInputOptional() && (pos + 1) >= tokens.size()) {
               qWarning() << "Option" << token << "requires input but none was given.";
               return false;
             }
-            else {
+            else if (!option->isInputOptional()) {
               if (!checkType(tokens[pos + 1], option->getType(), var)) {
                 qWarning() << "Invalid input type for option" << token;
                 return false;
@@ -76,6 +76,9 @@ bool CommandExecuter::execute(const QString &input) {
 
               options[option->getLongName()] = var;
               pos++;
+            }
+            else {
+              options[option->getLongName()];
             }
           }
 
@@ -226,8 +229,11 @@ bool CommandExecuter::parseOption(QString token, bool &longOpt, QStringList &opt
       
       eqSep = true;
     }
-    
-    if (toks[0].endsWith("=")) {
+
+    if (toks.size() == 0) {
+      optToks.append(token);
+    }
+    else if (toks[0].endsWith("=")) {
       if (toks.size() == 1) {
         return false;
       }
