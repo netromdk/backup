@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "conf/Config.h"
+using namespace conf;
 
 class ServerConfig {
 public:

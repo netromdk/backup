@@ -3,18 +3,20 @@
 
 #include <QString>
 
-/**
- * Access system-specific paths.
- */
-class Paths {
-public:
+namespace util {
   /**
-   * The configuration directory.
+   * Access system-specific paths.
    */
-  static QString getConfigDir();
+  class Paths {
+  public:
+    /**
+     * The configuration directory.
+     */
+    static QString getConfigDir();
 
-private:
-  static QString configDir;
-};
+  private:
+    static QString configDir;
+  };
+}
 
 #endif // PATHS_H

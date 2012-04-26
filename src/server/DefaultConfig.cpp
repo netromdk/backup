@@ -1,4 +1,3 @@
-#include "conf/Config.h"
 #include "DefaultConfig.h"
 
 ConfigTreeNode *DefaultConfig::create() {

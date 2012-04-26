@@ -3,9 +3,6 @@
 
 #include "Server.h"
 #include "ServerConfig.h"
-#include "comms/SslServer.h"
-#include "comms/Connection.h"
-#include "comms/StatePacket.h"
 
 Server::Server() : config(new ServerConfig), server(NULL) {
   if (!config->isValid()) {

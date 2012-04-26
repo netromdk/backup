@@ -4,28 +4,30 @@
 #include <QFlags>
 #include <QString>
 
-/**
- * Auxiliary functions regarding SSL.
- */ 
-class Ssl {
-public:
-  enum Error {
-    NoError = 0x0,
-    NotValid,
+namespace comms {
+  /**
+   * Auxiliary functions regarding SSL.
+   */ 
+  class Ssl {
+  public:
+    enum Error {
+      NoError = 0x0,
+      NotValid,
 
-    // Certificate errors.
-    NoCerts,
-    MultipleCerts,
-    NotEffective,
-    Expired,
-    InvalidPubKey
-  };
-  Q_DECLARE_FLAGS(Errors, Error);
+      // Certificate errors.
+      NoCerts,
+      MultipleCerts,
+      NotEffective,
+      Expired,
+      InvalidPubKey
+    };
+    Q_DECLARE_FLAGS(Errors, Error);
   
-  static Errors checkCert(const QString &cert);
-  static Errors checkKey(const QString &key);  
-};
+    static Errors checkCert(const QString &cert);
+    static Errors checkKey(const QString &key);  
+  };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Ssl::Errors);
+  Q_DECLARE_OPERATORS_FOR_FLAGS(Ssl::Errors);
+}
 
 #endif // SSL_H

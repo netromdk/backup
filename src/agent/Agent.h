@@ -3,8 +3,10 @@
 
 #include <QObject>
 
-class Connection;
-class StatePacket;
+#include "comms/Connection.h"
+#include "comms/StatePacket.h"
+using namespace comms;
+
 class AgentConfig;
 
 class Agent : public QObject {

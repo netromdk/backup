@@ -5,6 +5,7 @@
 #include <QString>
 
 #include "conf/Config.h"
+using namespace conf;
 
 class AgentConfig {
 public:

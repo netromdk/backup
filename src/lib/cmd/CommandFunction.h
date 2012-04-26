@@ -5,22 +5,24 @@
 #include <QVariantMap>
 #include <QVariantList>
 
-class CommandTreeNode;
+namespace cmd {
+  class CommandTreeNode;
 
-/**
- * Provides an abstract class that encapsulates what should be done
- * when a command has been parsed successfully.
- */
-class CommandFunction {
-public:
-  virtual ~CommandFunction() { }
-  
   /**
-   * Execute is called on success. The node will point to the last sub
-   * command of the input.
+   * Provides an abstract class that encapsulates what should be done
+   * when a command has been parsed successfully.
    */
-  virtual void execute(const CommandTreeNode *node, QVariantMap &options,
-                       QVariantList &posCmds, QStringList &extData) = 0;
-};
+  class CommandFunction {
+  public:
+    virtual ~CommandFunction() { }
+  
+    /**
+     * Execute is called on success. The node will point to the last sub
+     * command of the input.
+     */
+    virtual void execute(const CommandTreeNode *node, QVariantMap &options,
+                         QVariantList &posCmds, QStringList &extData) = 0;
+  };
+}
 
 #endif // COMMAND_FUNCTION_H

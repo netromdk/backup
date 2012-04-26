@@ -3,30 +3,32 @@
 
 #include <QString>
 
-/**
- * Utility functions.
- */
-class Utility {
-public:
+namespace util {
   /**
-   * Check if host name is valid.
+   * Utility functions.
    */
-  static bool checkHostName(const QString &host);
+  class Utility {
+  public:
+    /**
+     * Check if host name is valid.
+     */
+    static bool checkHostName(const QString &host);
 
-  /**
-   * Check if IP address is a valid IPv4 or IPv6 address.
-   */
-  static bool checkIP(const QString &ip);
+    /**
+     * Check if IP address is a valid IPv4 or IPv6 address.
+     */
+    static bool checkIP(const QString &ip);
 
-  /**
-   * Check if input is a valid host name or an IPv4 or IPv6 address.
-   */  
-  static bool checkHostOrIP(const QString &str);
+    /**
+     * Check if input is a valid host name or an IPv4 or IPv6 address.
+     */  
+    static bool checkHostOrIP(const QString &str);
 
-  /**
-   * Get the user name of the current user.
-   */
-  static QString getUserName();
-};
+    /**
+     * Get the user name of the current user.
+     */
+    static QString getUserName();
+  };
+}
 
 #endif // UTILITY_H

@@ -5,30 +5,32 @@
 
 #include <QByteArray>
 
-/**
- * Abstract base class for packets.
- */
-class Packet {
-public:
-  enum Kind {
-    State
-  };
-
-  virtual ~Packet() { }
-
-  Kind getKind() const { return kind; }
-
+namespace comms {
   /**
-   * Get next portion of data to be sent. 'max' determines the maximum
-   * bytes to retrieve if available.
+   * Abstract base class for packets.
    */
-  virtual QByteArray getData(qint64 max = PACKET_SIZE) = 0;
+  class Packet {
+  public:
+    enum Kind {
+      State
+    };
 
-protected:
-  Packet(Kind kind) : kind(kind) { }
+    virtual ~Packet() { }
 
-private:
-  Kind kind;
-};
+    Kind getKind() const { return kind; }
+
+    /**
+     * Get next portion of data to be sent. 'max' determines the maximum
+     * bytes to retrieve if available.
+     */
+    virtual QByteArray getData(qint64 max = PACKET_SIZE) = 0;
+
+  protected:
+    Packet(Kind kind) : kind(kind) { }
+
+  private:
+    Kind kind;
+  };
+}
 
 #endif // PACKET_H

@@ -23,6 +23,7 @@ SET( LIBS
   util
   conf
   comms
+  crypto
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )
@@ -35,4 +36,5 @@ ADD_DEPENDENCIES(
   util
   conf
   comms
+  crypto
   )

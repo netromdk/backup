@@ -6,8 +6,8 @@
 #include "DefaultConfig.h"
 
 AgentConfig::AgentConfig() : tree(NULL), valid(false) {
-  QDir().mkpath(Paths::getConfigDir());
-  config.setPath(Paths::getConfigDir() + "/agent.conf");
+  QDir().mkpath(util::Paths::getConfigDir());
+  config.setPath(util::Paths::getConfigDir() + "/agent.conf");
   load();
 
   if (config.getErrors().testFlag(Config::PathNonExistent)) {
@@ -71,7 +71,7 @@ void AgentConfig::load() {
   }
   QVariant var = node->getValue();
   hostVar = var.toString().trimmed();
-  if (var.isNull() || !Utility::checkHostOrIP(hostVar)) {
+  if (var.isNull() || !util::Utility::checkHostOrIP(hostVar)) {
     qCritical() << "AgentConfig/Host needs to be a correct host name / IP address!";
     return;
   }    

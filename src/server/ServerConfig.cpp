@@ -1,13 +1,15 @@
 #include <QDir>
 
 #include "comms/Ssl.h"
+using namespace comms;
+
 #include "util/Paths.h"
 #include "ServerConfig.h"
 #include "DefaultConfig.h"
 
 ServerConfig::ServerConfig() : tree(NULL), valid(false) {
-  QDir().mkpath(Paths::getConfigDir());
-  config.setPath(Paths::getConfigDir() + "/server.conf");
+  QDir().mkpath(util::Paths::getConfigDir());
+  config.setPath(util::Paths::getConfigDir() + "/server.conf");
   load();
 
   if (config.getErrors().testFlag(Config::PathNonExistent)) {

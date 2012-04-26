@@ -3,9 +3,11 @@
 
 #include <QObject>
 
-class SslServer;
-class Connection;
-class StatePacket;
+#include "comms/SslServer.h"
+#include "comms/Connection.h"
+#include "comms/StatePacket.h"
+using namespace comms;
+
 class ServerConfig;
 
 class Server : public QObject {

@@ -3,8 +3,6 @@
 
 #include "Agent.h"
 #include "AgentConfig.h"
-#include "comms/Connection.h"
-#include "comms/StatePacket.h"
 
 Agent::Agent() : config(new AgentConfig), conn(NULL) {
   if (!config->isValid()) {

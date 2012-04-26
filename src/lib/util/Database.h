@@ -9,85 +9,87 @@
 #include <QStringList>
 #include <QSqlDatabase>
 
-/**
- * Provides an interface to a SQLite 3.x database.
- */
-class Database : public QObject {
-public:
+namespace util {
   /**
-   * Get the manager instance - If calling this the first time during
-   * runtime then the path has to be set to the database to load.
+   * Provides an interface to a SQLite 3.x database.
    */
-  static Database *getInstance(const QString &path = QString());
+  class Database : public QObject {
+  public:
+    /**
+     * Get the manager instance - If calling this the first time during
+     * runtime then the path has to be set to the database to load.
+     */
+    static Database *getInstance(const QString &path = QString());
 
-  /**
-   * Checks that the SQLite driver is available.
-   */
-  static bool isSupported();
+    /**
+     * Checks that the SQLite driver is available.
+     */
+    static bool isSupported();
 
-  virtual ~Database();
+    virtual ~Database();
 
-  /**
-   * Determine whether the database connection is open and valid.
-   */
-  bool isOpen() const { return db.isValid() && db.isOpen(); }
+    /**
+     * Determine whether the database connection is open and valid.
+     */
+    bool isOpen() const { return db.isValid() && db.isOpen(); }
 
-  /**
-   * Enable/disable foreign key checks.
-   */
-  void enableForeignKeys(bool enable);
+    /**
+     * Enable/disable foreign key checks.
+     */
+    void enableForeignKeys(bool enable);
 
-  /**
-   * Retrieve the last database error.
-   */
-  QSqlError getError() const { return db.lastError(); }
+    /**
+     * Retrieve the last database error.
+     */
+    QSqlError getError() const { return db.lastError(); }
 
-  /**
-   * Check if any error has occurred.
-   */
-  bool hasError() const { return getError().isValid(); }
+    /**
+     * Check if any error has occurred.
+     */
+    bool hasError() const { return getError().isValid(); }
 
-  /**
-   * Execute specified query on the database.
-   */
-  bool executeQuery(const QString &query);
+    /**
+     * Execute specified query on the database.
+     */
+    bool executeQuery(const QString &query);
 
-  /**
-   * Drops table.
-   */
-  bool dropTable(const QString &name);
+    /**
+     * Drops table.
+     */
+    bool dropTable(const QString &name);
 
-  /**
-   * Get list of tables in the database.
-   */
-  QStringList getTables() const;
+    /**
+     * Get list of tables in the database.
+     */
+    QStringList getTables() const;
 
-  /**
-   * Check if table exists.
-   */
-  bool tableExists(const QString &name) const;
+    /**
+     * Check if table exists.
+     */
+    bool tableExists(const QString &name) const;
 
-  /**
-   * Get record of specified table. The record will consist of all
-   * columns (but not rows!) and their types and settings.
-   */
-  QSqlRecord getTableRecord(const QString &name);
+    /**
+     * Get record of specified table. The record will consist of all
+     * columns (but not rows!) and their types and settings.
+     */
+    QSqlRecord getTableRecord(const QString &name);
 
-  /**
-   * Add records to the specified table.
-   */
-  bool addTableRecords(const QString &name, const QList<QSqlRecord> &records);  
+    /**
+     * Add records to the specified table.
+     */
+    bool addTableRecords(const QString &name, const QList<QSqlRecord> &records);  
 
-  /**
-   * Add a record to the specified table.
-   */
-  bool addTableRecord(const QString &name, const QSqlRecord &record);
+    /**
+     * Add a record to the specified table.
+     */
+    bool addTableRecord(const QString &name, const QSqlRecord &record);
     
-private:
-  Database(const QString &path);
+  private:
+    Database(const QString &path);
   
-  static Database *instance;
-  QSqlDatabase db;
-};
-
-#endif // DATABASE_H
+    static Database *instance;
+    QSqlDatabase db;
+  };
+}
+  
+#endif // DATABASE_H  

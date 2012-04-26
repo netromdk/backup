@@ -2,57 +2,58 @@
 
 #include "StatePacket.h"
 
-StatePacket::StatePacket() : Packet(State), encoded(false), first(true) { }
+namespace comms {
+  StatePacket::StatePacket() : Packet(State), encoded(false), first(true) { }
 
-StatePacket *StatePacket::fromData(const QByteArray &data) {
-  StatePacket *packet = new StatePacket;
-  packet->setData(data);
-  return packet;
-}
-
-QByteArray StatePacket::getData(qint64 max) {
-  if (!encoded) encode();
-  
-  QByteArray res;
-
-  // Prepend the size of the data to the data so the other side knows
-  // how much to read.
-  if (first) {
-    first = false;
-    QDataStream stream(&res, QIODevice::WriteOnly);
-    stream << (qint32) data.size();
+  StatePacket *StatePacket::fromData(const QByteArray &data) {
+    StatePacket *packet = new StatePacket;
+    packet->setData(data);
+    return packet;
   }
 
-  // Take chunk of data.
-  int size = res.size();
-  res.append(data.left(max - size));
-  data = data.mid(res.size() - size);
-  return res;
-}
+  QByteArray StatePacket::getData(qint64 max) {
+    if (!encoded) encode();
+  
+    QByteArray res;
 
-void StatePacket::setData(const QByteArray &data) {
-  this->data = data;
-  decode();
-}
+    // Prepend the size of the data to the data so the other side knows
+    // how much to read.
+    if (first) {
+      first = false;
+      QDataStream stream(&res, QIODevice::WriteOnly);
+      stream << (qint32) data.size();
+    }
 
-QVariant &StatePacket::operator[](const QString &key) {
-  return dataMap[key];
-}
+    // Take chunk of data.
+    int size = res.size();
+    res.append(data.left(max - size));
+    data = data.mid(res.size() - size);
+    return res;
+  }
 
-QVariant StatePacket::operator[](const QString &key) const {
-  return dataMap[key];
-}
+  void StatePacket::setData(const QByteArray &data) {
+    this->data = data;
+    decode();
+  }
 
-void StatePacket::encode() {
-  data.clear();
-  QDataStream stream(&data, QIODevice::WriteOnly);
-  stream << dataMap;
-  encoded = true;
-}
+  QVariant &StatePacket::operator[](const QString &key) {
+    return dataMap[key];
+  }
 
-void StatePacket::decode() {
-  dataMap.clear();
-  QDataStream stream(data);
-  stream >> dataMap;
-}
+  QVariant StatePacket::operator[](const QString &key) const {
+    return dataMap[key];
+  }
 
+  void StatePacket::encode() {
+    data.clear();
+    QDataStream stream(&data, QIODevice::WriteOnly);
+    stream << dataMap;
+    encoded = true;
+  }
+
+  void StatePacket::decode() {
+    dataMap.clear();
+    QDataStream stream(data);
+    stream >> dataMap;
+  }
+}

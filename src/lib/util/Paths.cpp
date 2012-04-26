@@ -3,18 +3,20 @@
 #include "Env.h"
 #include "Paths.h"
 
-QString Paths::configDir = "";
+namespace util {
+  QString Paths::configDir = "";
 
-QString Paths::getConfigDir() {
-  if (!configDir.isEmpty()) {
-    return configDir;
-  }
+  QString Paths::getConfigDir() {
+    if (!configDir.isEmpty()) {
+      return configDir;
+    }
 
 #ifdef WIN
-  configDir = Env::get("%APPDATA%", QDir::tempPath()) + "/backup";
+    configDir = Env::get("%APPDATA%", QDir::tempPath()) + "/backup";
 #elif UNIX
-  configDir = QDir::homePath() + "/.backup";
+    configDir = QDir::homePath() + "/.backup";
 #endif
   
-  return configDir;
+    return configDir;
+  }
 }

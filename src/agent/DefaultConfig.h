@@ -4,7 +4,8 @@
 #include <QString>
 #include <QVariant>
 
-class ConfigTreeNode;
+#include "conf/Config.h"
+using namespace conf;
 
 enum DefaultConfigItemName {
   Host,
