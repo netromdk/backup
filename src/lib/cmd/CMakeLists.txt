@@ -1,5 +1,7 @@
 SET( NAME cmd )
 
+INCLUDE_DIRECTORIES( .. )
+
 SET( SOURCES
   CommandConsole.h
   CommandConsole.cpp
@@ -26,9 +28,15 @@ SET( HEADERS
 
 SET( CORELIBS
   ${QT_LIBRARIES}
+  util
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )
 
 ADD_LIBRARY( ${NAME} ${SOURCES} ${HEADERS_MOC} )
 TARGET_LINK_LIBRARIES( ${NAME} ${CORELIBS} )
+
+ADD_DEPENDENCIES(
+  ${NAME}
+  util
+  )
