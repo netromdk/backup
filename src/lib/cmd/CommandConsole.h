@@ -6,6 +6,10 @@
 class CommandTreeNode;
 class CommandExecuter;
 
+/**
+ * Provides a console loop asking for commands and interpreting them
+ * according to the command tree given.
+ */
 class CommandConsole {
 public:
   CommandConsole(const CommandTreeNode *tree);

@@ -17,6 +17,11 @@ typedef QList<CommandTreeNode*> CommandTreeNodeList;
 typedef QList<CommandOption*> CommandOptionList;
 typedef QList<PositionalCommand*> PositionalCommandList;
 
+/**
+ * Provides a way to represent a command structure with commands and
+ * sub commands with associated options (long/short and w/o inputs)
+ * and positional commands.
+ */
 class CommandTreeNode {
 public:
   CommandTreeNode(const QString &name = QString(), CommandFunction *func = NULL);

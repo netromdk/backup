@@ -5,6 +5,11 @@
 
 #include "CommandType.h"
 
+/**
+ * Provides a positional command which has a fixed place in a
+ * command. For instance, the command structure could be "listfiles
+ * <dir>" in which "<dir>" would be a positional command.
+ */
 class PositionalCommand {
 public:
   PositionalCommand(const QString &name, CommandType type);

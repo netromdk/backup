@@ -9,6 +9,14 @@
 
 class CommandTreeNode;
 
+/**
+ * Provides a command executer that takes input of strings of commands
+ * and interprets them using the given command tree. When a match is
+ * found the node in question will have its CommandTreeNode::execute
+ * method called, with the options, positional commands and extra
+ * data, which in turn calls the associated CommandFunction::execute
+ * method.
+ */ 
 class CommandExecuter {
 public:
   CommandExecuter(const CommandTreeNode *tree);
