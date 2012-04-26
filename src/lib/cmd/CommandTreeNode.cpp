@@ -98,7 +98,8 @@ void CommandTreeNode::print(QDebug dbg, int depth) const {
   }
 }
 
-void CommandTreeNode::execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData) {
+void CommandTreeNode::execute(QVariantMap &options, QVariantList &posCmds,
+                              QStringList &extData) const {
   if (hasFunction()) {
     func->execute(this, options, posCmds, extData);
   }

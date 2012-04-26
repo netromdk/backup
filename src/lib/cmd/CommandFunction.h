@@ -19,7 +19,7 @@ public:
    * Execute is called on success. The node will point to the last sub
    * command of the input.
    */
-  virtual void execute(CommandTreeNode *node, QVariantMap &options,
+  virtual void execute(const CommandTreeNode *node, QVariantMap &options,
                        QVariantList &posCmds, QStringList &extData) = 0;
 };
 

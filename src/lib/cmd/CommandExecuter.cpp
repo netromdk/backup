@@ -6,9 +6,7 @@
 #include "CommandTreeNode.h"
 #include "PositionalCommand.h"
 
-CommandExecuter::CommandExecuter(CommandTreeNode *tree) : tree(tree) {
-  
-}
+CommandExecuter::CommandExecuter(const CommandTreeNode *tree) : tree(tree) { }
 
 bool CommandExecuter::execute(const QString &input) {
   clearState();
@@ -18,7 +16,7 @@ bool CommandExecuter::execute(const QString &input) {
   QStringList tokens = parse(input);
   qDebug() << "tokens:" << tokens;
 
-  CommandTreeNode *node = traverse(tree, tokens);
+  const CommandTreeNode *node = traverse(tree, tokens);
   if (!node) {
     qWarning() << "Invalid command" << tokens[lastToken];
     return false;
@@ -40,7 +38,7 @@ bool CommandExecuter::execute(const QString &input) {
     if (parseOption(token, longOpt, optToks)) {
       QString optName = optToks[0];
 
-      foreach (CommandOption *option, node->getOptions()) {
+      foreach (const CommandOption *option, node->getOptions()) {
         if (option->getLongName() == optName || option->getShortName() == optName) {
           if (longOpt && option->getShortName() == optName) {
             qWarning() << "Long option" << token << "is only valid as a short option";
@@ -172,8 +170,8 @@ void CommandExecuter::clearState() {
   extData.clear();
 }
 
-CommandTreeNode *CommandExecuter::traverse(CommandTreeNode *node,
-                                           QStringList &tokens, uint pos) {
+const CommandTreeNode *CommandExecuter::traverse(const CommandTreeNode *node,
+                                                 QStringList &tokens, uint pos) {
   if (pos >= tokens.size()) {
     return node;
   }

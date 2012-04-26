@@ -40,7 +40,7 @@ public:
   void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
   bool hasFunction() const { return func != NULL; }
-  void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData);
+  void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData) const;
 
 private:
   QString name, desc;

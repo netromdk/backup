@@ -11,18 +11,18 @@ class CommandTreeNode;
 
 class CommandExecuter {
 public:
-  CommandExecuter(CommandTreeNode *tree);
+  CommandExecuter(const CommandTreeNode *tree);
 
   bool execute(const QString &input);
 
 private:
   QStringList parse(const QString &input, bool ignoreLongOpt = true);
   void clearState();
-  CommandTreeNode *traverse(CommandTreeNode *node, QStringList &tokens, uint pos = 0);
+  const CommandTreeNode *traverse(const CommandTreeNode *node, QStringList &tokens, uint pos = 0);
   bool parseOption(QString token, bool &longOpt, QStringList &optToks);
   bool checkType(const QString &token, CommandType type, QVariant &var);
   
-  CommandTreeNode *tree;
+  const CommandTreeNode *tree;
 
   // State for executing commands.
   int lastToken;
