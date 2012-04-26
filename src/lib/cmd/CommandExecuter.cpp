@@ -24,6 +24,11 @@ bool CommandExecuter::execute(const QString &input) {
     return false;
   }
 
+  if (node->getNodes().size() > 0) {
+    qWarning() << node->getName() << "has sub commands defined - use one of those";
+    return false;
+  }
+
   int pos = ++lastToken, optMisses = 0;
   QString token;
   for (; pos < tokens.size(); pos++) {
