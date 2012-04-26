@@ -10,12 +10,8 @@ CommandExecuter::CommandExecuter(const CommandTreeNode *tree) : tree(tree) { }
 
 bool CommandExecuter::execute(const QString &input) {
   clearState();
-
-  qDebug() << "input:" << input;
   
   QStringList tokens = parse(input);
-  qDebug() << "tokens:" << tokens;
-
   const CommandTreeNode *node = traverse(tree, tokens);
   if (!node) {
     qWarning() << "Invalid command" << tokens[lastToken];

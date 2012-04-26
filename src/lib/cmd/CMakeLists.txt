@@ -1,6 +1,9 @@
 SET( NAME cmd )
 
 SET( SOURCES
+  CommandConsole.h
+  CommandConsole.cpp
+
   CommandExecuter.h
   CommandExecuter.cpp
 
