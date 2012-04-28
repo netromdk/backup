@@ -16,10 +16,6 @@ namespace cmd {
   { }  
 
   CommandTreeNode::~CommandTreeNode() {
-    if (func) {
-      delete func;
-    }
-  
     qDeleteAll(nodes);
   }
 
