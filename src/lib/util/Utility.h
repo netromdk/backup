@@ -2,6 +2,7 @@
 #define UTILITY_H
 
 #include <QString>
+#include <QStringList>
 
 namespace util {
   /**
@@ -28,6 +29,12 @@ namespace util {
      * Get the user name of the current user.
      */
     static QString getUserName();
+
+    /**
+     * Convert CLI arguments to a string list keeping string literals
+     * if present.
+     */
+    static QStringList argsToList(int argc, char **argv);
   };
 }
 

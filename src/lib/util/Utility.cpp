@@ -31,4 +31,14 @@ namespace util {
   
     return user;
   }
+
+  QStringList Utility::argsToList(int argc, char **argv) {
+    QStringList args;
+    for (int i = 1; i < argc; i++) {
+      QString arg(argv[i]);
+      bool strlit = (arg.indexOf(" ") != -1);
+      args.append((strlit ? "\"" : "") + arg + (strlit ? "\"" : ""));
+    }
+    return args;
+  }
 }
