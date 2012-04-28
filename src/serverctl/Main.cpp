@@ -1,34 +1,26 @@
 #include <QDebug>
 #include <QCoreApplication>
 
-#include <signal.h>
+#include "cmd/CommandConsole.h"
+#include "cmd/CommandTreeNode.h"
+using namespace cmd;
 
-void signalHandler(int signal) {
-  static QList<int> sup = QList<int>() << SIGABRT << SIGTERM << SIGINT << SIGKILL;
-  if (!sup.contains(signal)) {
-    qWarning() << "Caught unsupported signal:" << signal;
-    return;
-  }
+#include "util/Utility.h"
 
-  qDebug() << "Caught signal. Terminating..";
-  
-  // Clean what should be cleaned here..
-    
-  QCoreApplication::exit(0);
-}
+#include "CommandBuilder.h"
 
 int main(int argc, char **argv) {
   QCoreApplication app(argc, argv);
 
-  // Register signals for cleanup.
-  signal(SIGABRT, &signalHandler);
-	signal(SIGTERM, &signalHandler);
-	signal(SIGINT, &signalHandler);
-
-#ifndef WIN
-  // SIGKILL is not available on Windows.
-	signal(SIGKILL, &signalHandler);
-#endif    
+  CommandBuilder builder;
+  CommandConsole console(builder.getRootNode());
   
-  return app.exec();
+  if (argc > 1) {
+    console.execute(util::Utility::argsToList(argc, argv).join(" "));
+  }
+  else {
+    console.loop();
+  }
+
+  return 0;
 }
