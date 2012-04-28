@@ -86,13 +86,22 @@ namespace cmd {
     }
 
     // Positional commands
-    foreach (PositionalCommand *cmd, posCmds) {
-      dbg.nospace() << qPrintable(pad) << "<" << qPrintable(cmd->getName()) << ">"
+    for (int i = 0; i < posCmds.size(); i++) {
+      const PositionalCommand *cmd = posCmds[i];
+      
+      dbg.nospace() << qPrintable(pad) << (posCmdsOpt && i == 0 ? "[" : "")
+                    << "<" << qPrintable(cmd->getName()) << ">"
                     << " (" << QVariant::typeToName((QVariant::Type) cmd->getType())
                     << " type)";
+      
       if (cmd->hasDescription()) {
         dbg.nospace() << " # " << qPrintable(cmd->getDescription());
       }
+      
+      if (posCmdsOpt && i == posCmds.size() - 1) {
+        dbg.nospace() << "]";
+      }
+      
       dbg << "\n";
     }
 
