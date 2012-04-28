@@ -118,25 +118,76 @@ namespace cmd {
   }
 
   bool CommandTreeNode::isSane() const {
+    foreach (const CommandOption *opt, options) {
+      if (opt->getLongName().isEmpty()) {
+        qWarning() << "Missing option long name\n";
+        qWarning() << this;
+        return false;
+      }
+      
+      foreach (const CommandOption *opt2, options) {
+        if (opt == opt2) continue;
+
+        if (opt->getLongName() == opt2->getLongName()) {
+          qWarning() << "Duplicate option long name:" << opt->getLongName() << "\n";
+          qWarning() << this;
+          return false;
+        }
+
+        else if (!opt->getShortName().isEmpty() && !opt2->getShortName().isEmpty()
+                 && opt->getShortName() == opt2->getShortName()) {
+          qWarning() << "Duplicate option short name:" << opt->getShortName() << "\n";
+          qWarning() << this;
+          return false;
+        }        
+      }      
+    }
+
+    foreach (const PositionalCommand *pos, posCmds) {
+      if (pos->getName().isEmpty()) {
+        qWarning() << "Missing positional command name\n";
+        qWarning() << this;
+        return false;
+      }
+
+      foreach (const PositionalCommand *pos2, posCmds) {
+        if (pos == pos2) continue;
+
+        if (pos->getName() == pos2->getName()) {
+          qWarning() << "Duplicate positional command name:" << pos->getName() << "\n";
+          qWarning() << this;
+          return false;
+        }
+      }      
+    }
+    
     foreach (const CommandTreeNode *n, nodes) {
+      if (n->getName().isEmpty()) {
+        qWarning() << "Missing command name\n";
+        qWarning() << this;
+        return false;
+      }
+      
       foreach (const CommandTreeNode *n2, nodes) {
         if (n == n2) continue;
 
         if (n->getName() == n2->getName()) {
-          qWarning() << "Duplicate command name:" << n->getName();
+          qWarning() << "Duplicate command name:" << n->getName() << "\n";
+          qWarning() << n;
+          qWarning() << n2;          
           return false;
         }
 
         else if (!n->getShortName().isEmpty() && !n2->getShortName().isEmpty()
                  && n->getShortName() == n2->getShortName()) {
-          qWarning() << "Duplicate command short name:" << n->getShortName();
+          qWarning() << "Duplicate command short name:" << n->getShortName() << "\n";
+          qWarning() << n;
+          qWarning() << n2;          
           return false;          
         }        
-      }      
-    }
-
-    foreach (const CommandTreeNode *n, nodes) {
-      if (!n->isSane()) return false;
+      }
+      
+      if (!n->isSane()) return false;      
     }
 
     return true;
