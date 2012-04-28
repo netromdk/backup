@@ -44,6 +44,10 @@ namespace cmd {
     }
   }
 
+  bool CommandConsole::execute(const QString &cmd) {
+    return executer->execute(cmd);
+  }
+
   void CommandConsole::setTermString(const QString &term) {
     termString = term;
   }

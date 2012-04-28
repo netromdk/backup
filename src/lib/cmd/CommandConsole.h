@@ -22,6 +22,11 @@ namespace cmd {
     void loop();
 
     /**
+     * Executes the command.
+     */
+    bool execute(const QString &cmd);
+
+    /**
      * Sets the terminal string which appears before every command
      * prompt.
      *
