@@ -21,7 +21,7 @@ namespace cmd {
   /**
    * Provides a way to represent a command structure with commands and
    * sub commands with associated options (long/short and w/o inputs)
-   * and positional commands.
+   * and positional commands which can all be optional or not.
    */
   class CommandTreeNode {
   public:
@@ -37,6 +37,7 @@ namespace cmd {
     bool hasDescription() const { return !desc.isEmpty(); }
 
     void addNode(CommandTreeNode *node);
+    CommandTreeNode *getNode(const QString &name) const;
     CommandTreeNodeList getNodes() const { return nodes; }
 
     void addOption(CommandOption *option);

@@ -23,6 +23,16 @@ namespace cmd {
     nodes.append(node);
   }
 
+  CommandTreeNode *CommandTreeNode::getNode(const QString &name) const {
+    foreach (CommandTreeNode *node, nodes) {
+      if (node->getName() == name || node->getShortName() == name) {
+        return node;
+      }
+    }
+
+    return NULL;
+  }
+
   void CommandTreeNode::addOption(CommandOption *option) {
     options.append(option);
   }
