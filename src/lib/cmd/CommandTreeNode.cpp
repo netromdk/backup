@@ -116,4 +116,29 @@ namespace cmd {
       qWarning() << getName() << "has no defined function.";
     }
   }
+
+  bool CommandTreeNode::isSane() const {
+    foreach (const CommandTreeNode *n, nodes) {
+      foreach (const CommandTreeNode *n2, nodes) {
+        if (n == n2) continue;
+
+        if (n->getName() == n2->getName()) {
+          qWarning() << "Duplicate command name:" << n->getName();
+          return false;
+        }
+
+        else if (!n->getShortName().isEmpty() && !n2->getShortName().isEmpty()
+                 && n->getShortName() == n2->getShortName()) {
+          qWarning() << "Duplicate command short name:" << n->getShortName();
+          return false;          
+        }        
+      }      
+    }
+
+    foreach (const CommandTreeNode *n, nodes) {
+      if (!n->isSane()) return false;
+    }
+
+    return true;
+  }
 }

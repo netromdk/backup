@@ -50,6 +50,8 @@ namespace cmd {
     bool hasFunction() const { return func != NULL; }
     void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData) const;
 
+    bool isSane() const;
+
   private:
     QString name, shortName, desc;
     CommandFunction *func;
