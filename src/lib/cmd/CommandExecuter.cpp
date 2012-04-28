@@ -181,7 +181,7 @@ namespace cmd {
     }
 
     foreach (CommandTreeNode *n, node->getNodes()) {
-      if (n->getName() == token) {
+      if (n->getName() == token | n->getShortName() == token) {
         // If the node has no children then return at once so that the
         // extra tokens can be checked as options etc..
         if (n->getNodes().size() == 0) {

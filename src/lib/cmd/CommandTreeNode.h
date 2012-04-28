@@ -26,9 +26,11 @@ namespace cmd {
   class CommandTreeNode {
   public:
     CommandTreeNode(const QString &name = QString(), CommandFunction *func = NULL);
+    CommandTreeNode(const QString &name, const QString &shortName, CommandFunction *func = NULL);    
     virtual ~CommandTreeNode();
 
     QString getName() const { return name; }
+    QString getShortName() const { return shortName; }    
 
     void setDescription(const QString &desc) { this->desc = desc; }
     QString getDescription() const { return desc; }
@@ -49,7 +51,7 @@ namespace cmd {
     void execute(QVariantMap &options, QVariantList &posCmds, QStringList &extData) const;
 
   private:
-    QString name, desc;
+    QString name, shortName, desc;
     CommandFunction *func;
     CommandTreeNodeList nodes;
     CommandOptionList options;

@@ -10,6 +10,11 @@ namespace cmd {
     : name(name), func(func)
   { }
 
+  CommandTreeNode::CommandTreeNode(const QString &name, const QString &shortName,
+                                   CommandFunction *func)
+    : name(name), shortName(shortName), func(func)
+  { }  
+
   CommandTreeNode::~CommandTreeNode() {
     if (func) {
       delete func;
@@ -36,8 +41,11 @@ namespace cmd {
       pad += "  ";
     }
 
-    // Name
+    // Name / short name.
     QString n = (name.isEmpty() ? "<no name>" : name);
+    if (!shortName.isEmpty()) {
+      n += " | " + shortName;
+    }
     dbg.nospace() << qPrintable(pad) << qPrintable(n);
 
     // Description

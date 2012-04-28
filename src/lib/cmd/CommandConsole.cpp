@@ -36,7 +36,8 @@ namespace cmd {
         qDebug() << "Bye bye..";
         break;
       }
-    
+
+      line = line.trimmed();
       if (line.isEmpty()) continue;
     
       executer->execute(line);
