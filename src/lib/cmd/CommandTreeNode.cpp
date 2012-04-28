@@ -7,12 +7,12 @@
 
 namespace cmd {
   CommandTreeNode::CommandTreeNode(const QString &name, CommandFunction *func)
-    : name(name), func(func)
+    : name(name), posCmdsOpt(false), func(func)
   { }
 
   CommandTreeNode::CommandTreeNode(const QString &name, const QString &shortName,
                                    CommandFunction *func)
-    : name(name), shortName(shortName), func(func)
+    : name(name), shortName(shortName), posCmdsOpt(false), func(func)
   { }  
 
   CommandTreeNode::~CommandTreeNode() {

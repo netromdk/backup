@@ -44,6 +44,8 @@ namespace cmd {
 
     void addPosCmd(PositionalCommand *posCmd);
     PositionalCommandList getPosCmds() const { return posCmds; }
+    bool isPosCmdsOptional() const { return posCmdsOpt; }
+    void setPosCmdsOptional(bool optional) { posCmdsOpt = optional; }
 
     void print(QDebug dbg = QDebug(QtDebugMsg), int depth = 0) const;
 
@@ -54,6 +56,7 @@ namespace cmd {
 
   private:
     QString name, shortName, desc;
+    bool posCmdsOpt;
     CommandFunction *func;
     CommandTreeNodeList nodes;
     CommandOptionList options;

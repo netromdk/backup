@@ -91,28 +91,30 @@ namespace cmd {
       }
     }
 
-    int posOffset = (pos - optMisses);
+    int posOffset = (pos - optMisses), posMatched = 0;
 
-    // Positional command?
-    PositionalCommandList posCmdList = node->getPosCmds();
-    int posMatched = 0;
-    for (int j = 0; j < posCmdList.size() && (j + posOffset) < tokens.size(); j++) {
-      token = tokens[j + posOffset];
-      PositionalCommand *cmd = posCmdList[j];
+    // Positional command?    
+    if (!node->isPosCmdsOptional()
+        || (node->isPosCmdsOptional() && posOffset < tokens.size())) {
+      PositionalCommandList posCmdList = node->getPosCmds();
+      for (int j = 0; j < posCmdList.size() && (j + posOffset) < tokens.size(); j++) {
+        token = tokens[j + posOffset];
+        PositionalCommand *cmd = posCmdList[j];
     
-      QVariant var;
-      if (!checkType(token, cmd->getType(), var)) {
-        qWarning() << "Invalid type for positional command" << posCmdList[j]->getName();
-        return false;
+        QVariant var;
+        if (!checkType(token, cmd->getType(), var)) {
+          qWarning() << "Invalid type for positional command" << posCmdList[j]->getName();
+          return false;
+        }
+
+        posCmds.append(var);
+        posMatched++;    
       }
 
-      posCmds.append(var);
-      posMatched++;    
-    }
-
-    if (posMatched != posCmdList.size()) {
-      qWarning() << "Positional command" << posCmdList[posMatched]->getName() << "required";
-      return false;
+      if (posMatched != posCmdList.size()) {
+        qWarning() << "Positional command" << posCmdList[posMatched]->getName() << "required";
+        return false;
+      }
     }
 
     // Extraneous data?
