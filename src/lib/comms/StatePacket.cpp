@@ -48,12 +48,13 @@ namespace comms {
     data.clear();
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << dataMap;
+    data = qCompress(data);
     encoded = true;
   }
 
   void StatePacket::decode() {
     dataMap.clear();
-    QDataStream stream(data);
+    QDataStream stream(qUncompress(data));
     stream >> dataMap;
   }
 }
