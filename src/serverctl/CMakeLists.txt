@@ -23,6 +23,8 @@ SET( LIBS
   ${QT_LIBRARIES}
   util 
   cmd
+  crypto
+  srv
   )
 
 QT4_WRAP_CPP( HEADERS_MOC ${HEADERS} )
@@ -34,4 +36,6 @@ ADD_DEPENDENCIES(
   ${NAME}
   util
   cmd
+  crypto
+  srv
   )

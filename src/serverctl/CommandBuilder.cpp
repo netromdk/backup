@@ -1,5 +1,6 @@
 #include <QDebug>
 
+#include "cmd/CommandOption.h"
 #include "cmd/PositionalCommand.h"
 
 #include "HelpContext.h"
@@ -47,8 +48,14 @@ void CommandBuilder::build() {
   agentMgt->addNode(agentAdd);
 
   CommandTreeNode *agentRem = new CommandTreeNode("remove", "r", agentCtx);
-  agentMgt->addNode(agentRem);  
+  agentRem->setPosCmdsOptional(true);
+  agentRem->addPosCmd(new PositionalCommand("id", cmd::String));
+  agentRem->addOption(new CommandOption("all", "a"));
+  agentRem->addOption(new CommandOption("force", "f"));  
+  agentMgt->addNode(agentRem);
 
   CommandTreeNode *agentList = new CommandTreeNode("list", "l", agentCtx);
+  agentList->setPosCmdsOptional(true);
+  agentList->addPosCmd(new PositionalCommand("id", cmd::String));  
   agentMgt->addNode(agentList);  
 }
