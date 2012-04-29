@@ -4,6 +4,7 @@
 #include <QList>
 #include <QObject>
 #include <QString>
+#include <QDateTime>
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QStringList>
@@ -25,6 +26,17 @@ namespace util {
      * Checks that the SQLite driver is available.
      */
     static bool isSupported();
+
+    /**
+     * Convert a date into a string.
+     */
+    static QString dateToString(const QDateTime &date);
+
+    /**
+     * Convert a string representation of a date ("YYYY-MM-DD
+     * HH:MM:SS.SSS") into a date object.
+     */
+    static QDateTime stringToDate(const QString &date);    
 
     virtual ~Database();
 

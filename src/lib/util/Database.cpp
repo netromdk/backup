@@ -25,6 +25,14 @@ namespace util {
     return QSqlDatabase::isDriverAvailable("QSQLITE");
   }
 
+  QString Database::dateToString(const QDateTime &date) {
+    return date.toString("yyyy-MM-dd hh:mm:ss.zzz");
+  }
+
+  QDateTime Database::stringToDate(const QString &date) {
+    return QDateTime::fromString("yyyy-MM-dd hh:mm:ss.zzz");
+  }  
+
   Database::Database(const QString &path) {
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
 
