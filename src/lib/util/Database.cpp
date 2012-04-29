@@ -30,7 +30,7 @@ namespace util {
   }
 
   QDateTime Database::stringToDate(const QString &date) {
-    return QDateTime::fromString("yyyy-MM-dd hh:mm:ss.zzz");
+    return QDateTime::fromString(date, "yyyy-MM-dd hh:mm:ss.zzz");
   }  
 
   Database::Database(const QString &path) {
