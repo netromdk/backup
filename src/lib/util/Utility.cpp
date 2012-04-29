@@ -1,4 +1,5 @@
 #include <QRegExp>
+#include <QTextStream>
 #include <QHostAddress>
 
 #include "Env.h"
@@ -40,5 +41,32 @@ namespace util {
       args.append((strlit ? "\"" : "") + arg + (strlit ? "\"" : ""));
     }
     return args;
+  }
+
+  QString Utility::prompt(const QString &msg, bool requireInput) {
+    QTextStream stdIn(stdin, QIODevice::ReadOnly),
+      stdOut(stdout, QIODevice::WriteOnly);
+    stdIn.setCodec("UTF-8");
+    stdIn.setAutoDetectUnicode(true);
+
+  start:
+    stdOut << msg;
+    stdOut.flush();
+    
+    QString line = stdIn.readLine();
+
+    // If EOF was reached then recreate stream.
+    if (requireInput && stdIn.atEnd()) {
+      stdOut << "\n";
+      stdOut.flush();
+      return prompt(msg, requireInput);
+    }
+
+    line = line.trimmed();
+    if (requireInput && line.isEmpty()) {
+      goto start;
+    }
+
+    return line;
   }
 }

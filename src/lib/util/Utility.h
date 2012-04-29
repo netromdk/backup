@@ -35,6 +35,12 @@ namespace util {
      * if present.
      */
     static QStringList argsToList(int argc, char **argv);
+
+    /**
+     * Prompt for input. 'requireInput' determines whether it will
+     * continue until non-empty input is given.
+     */
+    static QString prompt(const QString &msg, bool requireInput = true);
   };
 }
 
